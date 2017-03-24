@@ -1,0 +1,70 @@
+/* Base Application Styles */
+
+
+body,html,#app{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+p{
+  margin: 0;
+}
+li{list-style-type:none;}
+ul{padding: 0}
+.wrapper-main-index{
+
+}
+.wrapper-main-index-ani{
+  transform: translateY(-1000px);
+  transition: transform ease 3s;
+}
+
+
+.wrapper-main-contentNone{
+  display: none;
+}
+.wrapper-main-contentShow{
+  position: absolute;
+  display: block;
+  background-color: RGB(225,226,227);
+}
+
+
+
+
+@media screen and (min-width: 320px) {
+  html {
+    font-size: 87.5px;
+  }
+}
+
+@media screen and (min-width: 360px) {
+  html {
+    font-size: 100px;
+  }
+}
+
+@media screen and (min-width: 400px) {
+  html {
+    font-size: 112.5px;
+  }
+}
+
+@media screen and (min-width: 440px) {
+  html {
+    font-size: 125px;
+  }
+}
+
+@media screen and (min-width: 480px) {
+  html {
+    font-size: 137.5px;
+  }
+}
+
+@media screen and (min-width: 640px) {
+  html {
+    font-size: 150px;
+  }
+}

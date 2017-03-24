@@ -1,0 +1,88 @@
+{
+"data":[
+ {
+   "year": "安徽",
+   "farm": 0.46,
+   "people": 1982,
+   "house": 130.5,
+   "money": null
+ },
+ {
+   "year": "江苏",
+   "farm": 0.55,
+   "people": 7819,
+   "house": 31.8,
+   "money": null
+ },
+ {
+   "year": "福建",
+   "farm": 0.18,
+   "people": 4162,
+   "house": 14.5,
+   "money": null
+ },
+ {
+   "year": "甘肃",
+   "farm": 0.54,
+   "people": 3308,
+   "house": 322,
+   "money": null
+ },
+ {
+   "year": "广东",
+   "farm": 0.12,
+   "people": 42447,
+   "house": 900.9,
+   "money": null
+ },
+ {
+   "year": "江西",
+   "farm": 0.31,
+   "people": 2718,
+   "house": 49.2,
+   "money": null
+ },
+ {
+   "year": "陕西",
+   "farm": 0.31,
+   "people": 10676,
+   "house": 465.9,
+   "money": null
+ },
+ {
+   "year": "上海",
+   "farm": 0.38,
+   "people": 4415,
+   "house": 371.2,
+   "money": null
+ },
+ {
+   "year": "四川",
+   "farm": 0.27,
+   "people": 3642,
+   "house": 77.1,
+   "money": null
+ },
+ {
+   "year": "宁夏",
+   "farm": 0.45,
+   "people": 4540,
+   "house": 42.1,
+   "money": null
+ },
+ {
+   "year": "山西",
+   "farm":0.6,
+   "people": 6033,
+   "house": 74.7,
+   "money": null
+ },
+ {
+   "year": "浙江",
+   "farm": 0.32,
+   "people": 5074,
+   "house": 146.3,
+   "money": null
+ }
+]
+}

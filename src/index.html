@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>我爱家乡的云摄影大赛</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    body, button, select, textarea, input, label, option, fieldset, legend{font-family: 微软雅黑,Tahoma,Verdana;font-size: 12px;line-height: 18px;color: #444;}
+    body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, legend, input, textarea, button, p, blockquote, th, td{margin: 0;padding: 0;}
+    textarea{resize: none}
+    .clear{height:1px;overflow:hidden;clear:both;}
+    a,img{border:0;}
+    a{color: #666;text-decoration: none;}
+    li{list-style-type:none;}
+    .fl{float:left;}
+    .fr{float:right;}
+    .nf{clear:both;}
+    .red{color:red;font-weight:bold;}
+    .green{color:#00b500;font-weight:bold;}
+    .ds{display:block;}
+    .hid{overflow:hidden;}
+    .clearfix{*zoom:1}
+    .clearfix:after{display:block;visibility:hidden;clear:both;height:0;content:'.';font-size:0}
+  </style>
+</head>
+<body >
+  <div id="app"></div>
+  <script>__REACT_DEVTOOLS_GLOBAL_HOOK__ = parent.__REACT_DEVTOOLS_GLOBAL_HOOK__</script>
+  <script type="text/javascript" src="./assets/app.js"></script>
+  <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+  <script>
+    var jsonp = function (options) {
+      var url = options.url,
+        params = options.params || {},
+        callbackKey = options.callbackKey || 'callback',
+        callback = options.callback;
+      var script = document.createElement('script');
+      var arr = [];
+      for (var key in params) {
+        arr.push(key + '=' + params[key]);
+      }
+      params = arr.join('&');
+      script.src = encodeURI(url + '?' + callbackKey + "=callback&"+params);
+      document.body.appendChild(script)
+      window.callback = callback;
+
+    }
+    var url=location.href;
+    url = url.replace("&","55555");
+    //    var url = "http://wxtq.weather.com.cn/vote";
+    jsonp({
+      url:'http://wxtq.weather.com.cn/jsapi/php/',
+      callbackKey: 'callback',
+      params:{"url": url},
+      callback:function (data) {
+        function getWXConfig(){
+          wx.config({
+            debug: false,
+            appId: data.appId,
+            timestamp: data.timestamp,
+            nonceStr: data.nonceStr,
+            signature: data.signature,
+            jsApiList: ["onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","startRecord","stopRecord","onVoiceRecordEnd","playVoice","pauseVoice","stopVoice","translateVoice","uploadVoice"]
+          });
+        }
+        getWXConfig();
+        window.share_config = {
+          "share": {
+            "imgUrl": "http://oh14ph22t.bkt.clouddn.com/kkk.jpg",//分享图，默认当相对路径处理，所以使用绝对路径的的话，“http://”协议前缀必须在。
+            "desc" : "你心中家乡的云是什么样子？中国气象学会&中国天气网青少年摄影大赛诚邀您选出“最美作品”。",//摘要,如果分享到朋友圈的话，不显示摘要。
+            "title" : '“我爱家乡的云”摄影大赛',//分享卡片标题
+            "link": "wxtq.weather.com.cn/vote/",//分享出去后的链接，这里可以将链接设置为另一个页面。
+            "success":function(){//分享成功后的回调函数
+            },
+            'cancel': function () {
+
+            }
+          }
+        };
+        wx.ready(function () {
+          wx.onMenuShareAppMessage(share_config.share);//分享给好友
+          wx.onMenuShareTimeline(share_config.share);//分享到朋友圈
+          wx.onMenuShareQQ(share_config.share);//分享给手机QQ
+        });
+      }
+    })
+  </script>
+</body>
+</html>
