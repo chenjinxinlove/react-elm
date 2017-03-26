@@ -1,25 +1,35 @@
 import 'core-js/fn/object/assign';
+import './styles/common.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-
-import App from './components/Main';
-
-
+import FastClick from 'fastclick';
+import { Router, hashHistory } from 'react-router';
+import routes from './router/router';
 import configureStore from './stores/configureStore';
+import { syncHistoryWithStore } from 'react-router-redux';
+import './config/rem';
 
-let store = configureStore();
+
+const store = configureStore();
+const history = syncHistoryWithStore(hashHistory, store);
+
+history.listen(function (location) { return location });
 
 
-function mapStateToProps(state) {
-  return {
-    value: state.count
-  }
+
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function () {
+    FastClick.attach(document.body);
+  }, false);
 }
+
 
 ReactDOM.render(
     <Provider store={store}>
-     <App />
+      <Router history={history}>
+        { routes }
+      </Router>
     </Provider>,
      document.getElementById('app')
 );

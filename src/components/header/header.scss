@@ -1,0 +1,16 @@
+@import '../../styles/mixin';
+
+#head_top {
+  background-color: $blue;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  @include wh(100%, 1.95rem);
+}
+.head_goback {
+  left: 0.4rem;
+  @include wh(0.6rem, 0.8rem);
+  line-height: 2.2rem;
+  margin-left: 4rem;
+}

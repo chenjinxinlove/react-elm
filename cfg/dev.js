@@ -5,12 +5,14 @@ let webpack = require('webpack');
 let baseConfig = require('./base');
 let autoprefixer = require('autoprefixer');
 let defaultSettings = require('./defaults');
+require("babel-polyfill");
 
 // Add needed plugins here
 let BowerWebpackPlugin = require('bower-webpack-plugin');
 
 let config = Object.assign({}, baseConfig, {
   entry: [
+    'babel-polyfill',
     'webpack-dev-server/client?http://localhost:' + defaultSettings.port,
     'webpack/hot/only-dev-server',
     './src/index'
