@@ -52,7 +52,6 @@ class Home extends React.Component {
       }
       return sortObj;
     };
-    console.log(sortGroupCity())
     return (
       <div>
         <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>

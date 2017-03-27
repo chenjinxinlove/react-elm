@@ -21,4 +21,16 @@ let groupCity = () => fetch('GET', '/v1/cities', {
   type: 'group'
 });
 
-export {cityGuess, hotCity, groupCity }
+//获取当前所在城市
+
+let currentCity = number => fetch('GET', '/v1/cities/' + number, {});
+
+//获取搜索地址
+
+let searchPlace = (cityId, value) => fetch('GET', '/v1/pois', {
+  type: 'search',
+  city_id: cityId,
+  keyword: value
+});
+
+export {cityGuess, hotCity, groupCity, currentCity, searchPlace }

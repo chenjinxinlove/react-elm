@@ -1,0 +1,66 @@
+@import "../../styles/mixin";
+.city_container{
+  padding-top: 2.35rem;
+}
+.change_city{
+  right: 0.4rem;
+  @include sc(0.6rem, #fff);
+  @include ct;
+}
+.city_form{
+  background-color: #fff;
+  border-top: 1px solid $bc;
+  border-bottom: 1px solid $bc;
+  padding-top: 0.4rem;
+  div{
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    .input_style{
+      border-radius: 0.1rem;
+      margin-bottom: 0.4rem;
+      @include wh(100%, 1.4rem);
+    }
+    .city_input{
+      border: 1px solid $bc;
+      padding: 0 0.3rem;
+      @include sc(0.65rem, #333);
+    }
+    .city_submit{
+      background-color: $blue;
+      @include sc(0.65rem, #fff);
+    }
+  }
+}
+.pois_search_history{
+  border-top: 1px solid $bc;
+  border-bottom: 1px solid $bc;
+  padding-left: 0.5rem;
+  @include font(0.475rem, 0.8rem);
+}
+.getpois_ul{
+  background-color: #fff;
+  border-top: 1px solid $bc;
+  li{
+    margin: 0 auto;
+    padding-top: 0.65rem;
+    border-bottom: 1px solid $bc;
+    .pois_name{
+      margin: 0 auto 0.35rem;
+      width: 90%;
+      @include sc(0.65rem, #333);
+    }
+    .pois_address{
+      width: 90%;
+      margin: 0 auto 0.55rem;
+      @include sc(0.45rem, #999);
+    }
+  }
+}
+.search_none_palce{
+  margin: 0 auto;
+  @include font(0.65rem, 1.75rem);
+  color: #333;
+  background-color: #fff;
+  text-indent: 0.5rem;
+}
