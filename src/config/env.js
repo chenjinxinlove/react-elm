@@ -6,8 +6,8 @@ let baseUrl;
 
 const imgBaseUrl = 'https://fuss10.elemecdn.com';
 
-baseUrl = 'https://mainsite-restapi.ele.me';
-
+// baseUrl = 'https://mainsite-restapi.ele.me';
+baseUrl = 'http://localhost:8002';
 export {
   baseUrl,
   imgBaseUrl

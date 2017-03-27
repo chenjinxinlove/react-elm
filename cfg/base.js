@@ -26,7 +26,13 @@ module.exports = {
     port: defaultSettings.port,
     publicPath: defaultSettings.publicPath,
     noInfo: false,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    proxy: {
+      '/v1': {
+        target: 'https://mainsite-restapi.ele.me',
+        changeOrigin: true
+      }
+    }
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],

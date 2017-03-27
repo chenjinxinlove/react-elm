@@ -11,7 +11,7 @@ let cityGuess = () => fetch('GET', '/v1/cities', {
 
 // 获取首页热门城市
 
-let hotCity = () => fetch('GET', '／v1／cities', {
+let hotCity = () => fetch('GET', '/v1/cities', {
   type: 'hot'
 });
 
