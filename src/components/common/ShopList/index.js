@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import {shopList} from '../../../service/getData';
 import {getImgPath} from '../../../plugins/mixin';
 
-import RatingStar from '../RatingStar'
+import RatingStar from '../RatingStar';
+import Loading from '../Loading';
 
 
 class ShopList extends Component {
@@ -21,7 +22,6 @@ class ShopList extends Component {
       showBackStatus: false, //显示返回顶部按钮
       showLoading: true //显示加载动画
     }
-    this.hideLoading = this.hideLoading.bind()
   }
 
   componentWillMount() {
@@ -30,16 +30,11 @@ class ShopList extends Component {
     async function getDataInit() {
       let res = await shopList(latLnt.latitude, latLnt.longitude);
       that.setState({
-        shopListArr: [...res]
+        shopListArr: [...res],
+        showLoading: false
       })
     }
     getDataInit();
-  }
-
-  hideLoading() {
-    this.setState({
-      showLoading: false
-    })
   }
 
   render () {
@@ -109,6 +104,10 @@ class ShopList extends Component {
             </ul>
             : <p className="empty_data">没有更多了</p>
         }
+        {
+          this.state.showLoading ? <Loading ></Loading> : ''
+        }
+
       </div>
     )
   }

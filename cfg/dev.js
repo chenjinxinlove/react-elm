@@ -15,7 +15,7 @@ let config = Object.assign({}, baseConfig, {
     'babel-polyfill',
     'webpack-dev-server/client?http://localhost:' + defaultSettings.port,
     'webpack/hot/only-dev-server',
-    './src/index'
+    './src/index.js'
   ],
   cache: true,
   devtool: 'eval-source-map',

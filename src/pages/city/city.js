@@ -4,7 +4,7 @@
 import './city.scss';
 import React, {Component} from 'react';
 
-import Header from 'components/header/index';
+import Header from 'components/header/index.js';
 import { currentCity, searchPlace } from '../../service/getData';
 import { getStore, setStore } from '../../config/mUtils';
 

@@ -6,7 +6,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { map } from 'underscore';
 
-import Header from 'components/header/index';
+import Header from 'components/header/index.js';
 import {cityGuess, hotCity, groupCity} from '../../service/getData';
 
 class Home extends React.Component {

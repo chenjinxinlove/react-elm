@@ -8,7 +8,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import Header from 'components/header/index';
+import Header from 'components/header/index.js';
 import ShopList from 'components/common/ShopList/index.js';
 import { saveGeohashAction, saveLatLntActions } from '../../actions';
 import {msiteAdress, msiteFoodTypes, msiteShopList} from '../../service/getData'
