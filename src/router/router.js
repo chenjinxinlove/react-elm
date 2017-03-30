@@ -15,6 +15,11 @@ const City = (location, cb) => {
     cb(null, require('../pages/city/city').default)
   },'City')
 };
+const Msite = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/msite/msite').default)
+  },'Msite')
+};
 
 
 const routes = (
@@ -24,6 +29,7 @@ const routes = (
     </Route>
     <Route path="/home" getComponent={ Home }></Route>
     <Route path="/city/:cityid" getComponent={ City } ></Route>
+    <Route path="/msite" getComponent= { Msite }></Route>
   </Route>
 );
 export default routes;

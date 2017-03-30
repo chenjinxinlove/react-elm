@@ -1,0 +1,66 @@
+@import '../../styles/mixin';
+.link_search{
+  left: .8rem;
+  @include wh(.8rem, .9rem);
+  @include ct;
+}
+.msite_title{
+  width: 50%;
+  color: #fff;
+  text-align: center;
+  margin-left: -0.5rem;
+  .title_text{
+    @include sc(0.8rem, #fff);
+    text-align: center;
+    display: block;
+  }
+}
+.msite_nav{
+  padding-top: 2.1rem;
+  background-color: #fff;
+  border-bottom: 0.025rem solid $bc;
+  .swiper-container{
+    @include wh(100%, auto);
+    padding-bottom: 0.6rem;
+    .swiper-pagination{
+      bottom: 0.2rem;
+    }
+  }
+}
+
+.food_types_container{
+  display:flex;
+  flex-wrap: wrap;
+  width: 100%;
+  .link_to_food{
+    width: 25%;
+    padding: 0.3rem 0rem;
+    @include fj(center);
+    figure{
+      img{
+        margin-bottom: 0.3rem;
+        @include wh(1.8rem, 1.8rem);
+      }
+      figcaption{
+        text-align: center;
+        @include sc(0.55rem, #666);
+      }
+    }
+  }
+}
+.shop_list_container{
+  margin-top: .4rem;
+  border-top: 0.025rem solid $bc;
+  background-color: #fff;
+  .shop_header{
+    .shop_icon{
+      margin-left: 0.6rem;
+      vertical-align: middle;
+      @include wh(0.6rem, 0.6rem);
+    }
+    .shop_header_title{
+      color: #999;
+      @include font(0.55rem, 1.6rem);
+    }
+  }
+}
