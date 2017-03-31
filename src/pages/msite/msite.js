@@ -30,19 +30,22 @@ class Msite extends Component {
     let geohash = this.props.location.query.geohash || 'wtw3sm0q087';
     // 保存geohash到store
     this.props.saveGeohash(geohash);
-
-    msiteAdress(geohash).then((res) => {
-      this.props.saveLatLnt(res);
-      this.setState({
+    let that = this;
+    this.setState({
+      geohash: geohash
+    });
+    async function getAddr() {
+      let res =  await msiteAdress(geohash);
+      that.props.saveLatLnt(res);
+      that.setState({
         msietTitle: res.name,
-        hashGetData: true,
-        geohash: geohash
+        hashGetData: true
       })
-    })
+    }
+    getAddr()
   }
 
   componentDidMount () {
-    setTimeout(() => {
       msiteFoodTypes(this.state.geohash).then(res => {
         let resLength = res.length;
         let resArr = res.concat([]);
@@ -54,13 +57,11 @@ class Msite extends Component {
           foodTypes: foorArr
         })
       }).then(() => {
-        new Swiper('.swiper-container', {
-          pagination: '.swiper-pagination',
-          loop: true
-        })
+          new Swiper('.swiper-container', {
+            pagination: '.swiper-pagination',
+            loop: true
+          })
       })
-    },1000)
-
   }
   getCategoryId(url){
     let urlData = decodeURIComponent(url.split('=')[1].replace('&target_name',''));
@@ -80,7 +81,7 @@ class Msite extends Component {
               {
                 this.state.foodTypes.map((item, index) => {
                   return (
-                    <div className="swiper-slide food_types_container" key={index}>
+                    <div className="swiper-slide food_types_container" key={index} id="slide">
                       {
                         item.map((foodItem) => {
                           return (

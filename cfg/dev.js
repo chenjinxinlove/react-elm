@@ -36,7 +36,7 @@ config.module.loaders.push({
   include: [].concat(
     config.additionalPaths,
     [ path.join(__dirname, '/../src') ]
-  )
+  ),
 });
 
 module.exports = config;
