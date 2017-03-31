@@ -66,6 +66,15 @@ let shopList = (latitude, longitude, offset, restaurant_category_id = '', restau
   return fetch('GET', '/shopping/restaurants', data);
 };
 
+// 获取search页面搜索结果
+
+let searchRestaurant = (geohash, keyword) => fetch('GET', '/v4/restaurants', {
+  'extras[]': 'restaurant_activity',
+  geohash,
+  keyword,
+  type: 'search'
+});
+
 
 export {cityGuess,
   hotCity,
@@ -74,5 +83,6 @@ export {cityGuess,
   searchPlace,
   msiteAdress,
   msiteFoodTypes,
-  shopList
+  shopList,
+  searchRestaurant
 }

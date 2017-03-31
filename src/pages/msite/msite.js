@@ -10,6 +10,7 @@ import { Link } from 'react-router';
 
 import Header from 'components/header/index.js';
 import ShopList from 'components/common/ShopList/index.js';
+import FootGuide from 'components/footer/footGuide.js';
 import { saveGeohashAction, saveLatLntActions } from '../../actions';
 import {msiteAdress, msiteFoodTypes, msiteShopList} from '../../service/getData'
 
@@ -118,6 +119,7 @@ class Msite extends Component {
             this.state.hashGetData ? <ShopList geohash={this.state.geohash}></ShopList> : ''
           }
         </div>
+        <FootGuide></FootGuide>
       </div>
     )
   }

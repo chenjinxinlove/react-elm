@@ -40,7 +40,11 @@ module.exports = {
       '/shopping':{
         target: 'https://mainsite-restapi.ele.me',
         changeOrigin: true
-      }
+      },
+      '/v4': {
+        target: 'https://mainsite-restapi.ele.me',
+        changeOrigin: true
+      },
     }
   },
   resolve: {

@@ -10,6 +10,7 @@ import {getImgPath} from '../../../plugins/mixin';
 
 import RatingStar from '../RatingStar';
 import Loading from '../Loading';
+import {showBack, animate} from '../../../config/mUtils'
 
 
 class ShopList extends Component {
@@ -22,6 +23,7 @@ class ShopList extends Component {
       showBackStatus: false, //显示返回顶部按钮
       showLoading: true //显示加载动画
     }
+    this.backTop = this.backTop.bind(this);
   }
 
   componentWillMount() {
@@ -32,9 +34,21 @@ class ShopList extends Component {
       that.setState({
         shopListArr: [...res],
         showLoading: false
-      })
+      });
     }
     getDataInit();
+  }
+
+  // componentDidMount() {
+  //   showBack(status => {
+  //     this.setState({
+  //       showBackStatus: status
+  //     });
+  //   });
+  // }
+
+  backTop() {
+    animate(document.body, {scrollTop: '0'}, 400,'ease-out');
   }
 
   render () {
@@ -103,6 +117,15 @@ class ShopList extends Component {
               }
             </ul>
             : <p className="empty_data">没有更多了</p>
+        }
+        {
+          this.state.showBackStatus ?
+            <aside className="return_top" onClick={this.backTop()}  >
+              <i className="fa fa-arrow-up fa-lg" aria-hidden="true"></i>
+            </aside> : ''
+        }
+        {
+          this.state.preventRepeatReuqest ? <footer className="loader_more" >正在加载更多商家...</footer> : ''
         }
         {
           this.state.showLoading ? <Loading ></Loading> : ''
