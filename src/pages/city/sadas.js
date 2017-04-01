@@ -13,7 +13,6 @@ import FootGuide from 'components/footer/footGuide.js';
 import {searchRestaurant} from '../../service/getData'
 import {getStore, setStore} from '../../config/mUtils'
 import { Link } from 'react-router';
-import {uniq} from 'underscore'
 
 class Search extends Component {
   constructor(props){
@@ -47,12 +46,11 @@ class Search extends Component {
 
   checkInput(e) {
     let value = e.target.value;
-    if (this.state.searchValue === '') {
+    if (this.searchValue === '') {
       this.setState({
         showHistory: true, //显示历史记录
         restaurantList: [], //清空搜索结果
-        emptyResult: false, //隐藏搜索为空提示
-        searchValue: value
+        emptyResult: false //隐藏搜索为空提示
       })
     } else {
       this.setState({
@@ -77,13 +75,11 @@ class Search extends Component {
     setStore('searchHistory', searchHistory)
   }
 
-  submitBtn(historyValue = '') {
+  submitBtn(e, historyValue = '') {
+    e.preventDefault();
     let that = this;
-
     async function searchTarget(historyValue) {
-      let serVal;
       if (historyValue) {
-        serVal = historyValue;
         that.setState({
           searchValue: historyValue
         })
@@ -94,12 +90,7 @@ class Search extends Component {
         showHistory: false
       });
       //获取搜索结果
-      if (!historyValue) {
-        serVal = that.state.searchValue;
-      }
-
-
-      let restaurantList = await searchRestaurant(that.state.geohash,  serVal);
+      let restaurantList = await searchRestaurant(that.state.geohash, that.state.searchValue);
       that.setState({
         restaurantList: restaurantList,
         emptyResult: !restaurantList.length
@@ -107,13 +98,24 @@ class Search extends Component {
       let history = getStore('searchHistory');
       let searchHistory = [];
       if (history) {
+        let checkrepeat = false;
         searchHistory = JSON.parse(history);
-        searchHistory.push(serVal)
+        searchHistory.forEach(item => {
+          if (item === that.state.searchValue) {
+            checkrepeat = true;
+          }
+        });
+
+        if (!checkrepeat) {
+          searchHistory.push(that.state.searchValue)
+        }
+      } else{
+        searchHistory.push(that.state.searchValue)
       }
       that.setState({
-        searchHistory: uniq(searchHistory)
+        searchHistory
       });
-      setStore('searchHistory',  uniq(searchHistory));
+      setStore('searchHistory', searchHistory);
 
     }
     searchTarget(historyValue)
@@ -125,7 +127,7 @@ class Search extends Component {
         <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
         <form action="" className="search_form">
           <input type="search" name="search" className="search_input" placeholder="请输入商家或美食名称"  onChange={ this.checkInput }/>
-          <input type="button" name="submit" value="提交" className="search_submit" onClick={ this.submitBtn.bind({},'') } />
+          <input type="submit" name="submit" className="search_submit" onClick={ this.submitBtn } />
         </form>
         {
           this.state.restaurantList.length ?
