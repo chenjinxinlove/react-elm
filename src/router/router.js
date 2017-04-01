@@ -27,6 +27,11 @@ const Search = (location, cb) => {
   },'Search')
 };
 
+const Food = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/food/food').default)
+  },'Food')
+}
 
 const routes = (
   <Route>
@@ -37,6 +42,7 @@ const routes = (
     <Route path="/city/:cityid" getComponent={ City } ></Route>
     <Route path="/msite" getComponent= { Msite }></Route>
     <Route path="/search/:geohash" getComponent= { Search }></Route>
+    <Route path="/food" getComponent= { Food }></Route>
   </Route>
 );
 export default routes;

@@ -75,6 +75,30 @@ let searchRestaurant = (geohash, keyword) => fetch('GET', '/v4/restaurants', {
   type: 'search'
 });
 
+//获取food页面的 category 种类列表
+
+let foodCategory = (latitude, longitude) => fetch('GET', '/shopping/v2/restaurant/category', {
+  latitude,
+  longitude
+});
+
+//获取food页面的配送方式
+
+let foodDelivery = (latitude, longitude) => fetch('GET', '/shopping/v1/restaurants/delivery_modes', {
+  latitude,
+  longitude,
+  kw: ''
+});
+
+
+//获取food页面的商家属性活动列表
+
+
+let foodActivity = (latitude, longitude) => fetch('GET', '/shopping/v1/restaurants/activity_attributes', {
+  latitude,
+  longitude,
+  kw: ''
+});
 
 export {cityGuess,
   hotCity,
@@ -84,5 +108,8 @@ export {cityGuess,
   msiteAdress,
   msiteFoodTypes,
   shopList,
-  searchRestaurant
+  searchRestaurant,
+  foodCategory,
+  foodDelivery,
+  foodActivity
 }
