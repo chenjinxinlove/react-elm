@@ -45,6 +45,12 @@ const Login = (location, cb) => {
   },'login')
 };
 
+const Forget = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/forget/forget').default)
+  },'forget')
+};
+
 const routes = (
   <Route>
     <Route path="/" component={App}>
@@ -57,6 +63,7 @@ const routes = (
     <Route path="/food" getComponent= { Food }></Route>
     <Route path="/profile" getComponent= { Profile }></Route>
     <Route path="/login" getComponent= { Login }></Route>
+    <Route path="/forget" getComponent= { Forget }></Route>
   </Route>
 );
 export default routes;

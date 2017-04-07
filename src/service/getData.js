@@ -129,6 +129,18 @@ let sendLogin = (code, mobile, validate_token) => fetch('POST', '/v1/login/app_m
 	validate_token
 });
 
+/**
+ * 发送帐号
+ */
+
+let sendMobile = (sendData, captcha_code, type, password) => fetch('POST', '/v1/mobile/verify_code/send', {
+  action: "send",
+  captcha_code,
+  [type]: sendData,
+  type: "sms",
+  way: type,
+  password,
+});
 
 export {cityGuess,
   hotCity,
@@ -146,5 +158,6 @@ export {cityGuess,
   getcaptchas,
   accountLogin,
   checkExsis,
-  sendLogin
+  sendLogin,
+  sendMobile
 }
