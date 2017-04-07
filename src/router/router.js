@@ -31,7 +31,19 @@ const Food = (location, cb) => {
   require.ensure([], require => {
     cb(null, require('../pages/food/food').default)
   },'Food')
-}
+};
+
+const Profile = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/profile/profile').default)
+  },'profile')
+};
+
+const Login = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/login/login').default)
+  },'login')
+};
 
 const routes = (
   <Route>
@@ -43,6 +55,8 @@ const routes = (
     <Route path="/msite" getComponent= { Msite }></Route>
     <Route path="/search/:geohash" getComponent= { Search }></Route>
     <Route path="/food" getComponent= { Food }></Route>
+    <Route path="/profile" getComponent= { Profile }></Route>
+    <Route path="/login" getComponent= { Login }></Route>
   </Route>
 );
 export default routes;

@@ -1,3 +1,142 @@
 /**
  * Created by chen on 2017/4/1.
  */
+import './profile.scss';
+import React, {Component} from 'react';
+import { Link } from 'react-router';
+
+import Header from 'components/header/index.js';
+import FootGuide from 'components/footer/footGuide.js';
+
+
+class Profile extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      profiletitle: '我的',
+      getUserinfo: {},        //得到数据
+      username: '登录/注册',           //用户名
+      resetname: '',
+      mobile: '登录后享受更多特权',             //电话号码
+      balance: 0,            //我的余额
+      count : 0,             //优惠券个数
+      pointNumber : 0,       //积分数
+      avatar: ''             //头像地址
+    }
+    this.parseInt = this.parseInt.bind(this);
+  }
+  parseInt(num) {
+
+  }
+  render() {
+    let userInfo = this.props.userInfo;
+    return (
+      <div>
+        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <section>
+          <section className="profile-number">
+            {
+              <Link className="profile-link" to={  !userInfo ? '/profile/info': '/profile-link' }>
+                {
+                  this.state.avatar ? <img src={ userInfo.imgpath } alt="" className="privateImage"/>:
+                    <span className="privateImage">
+                      <i className="fa fa-user-circle-o" aria-hidden="true"></i>
+                    </span>
+                }
+                <div className="user-info">
+                  <p>{ this.state.username }</p>
+                  <p>
+                    <span className="user-icon">
+                      <i className="fa fa-mobile" aria-hidden="true"></i>
+                    </span>
+                    <span className="icon-mobile-number">{ this.state.mobile }</span>
+                  </p>
+                </div>
+                <span className="arrow">
+                  <i className="fa fa-angle-right" aria-hidden="true"></i>
+                </span>
+              </Link>
+            }
+          </section>
+          <section className="info-data">
+            <ul className="clear">
+              <Link to="/balance">
+                <li className="info-data-link">
+                <span className="info-data-top">
+                  <b> { parseInt(this.state.balance).toFixed(2) } </b>元
+                </span>
+                  <span className="info-data-bottom">我的余额</span>
+                </li>
+              </Link>
+              <Link to="/benefit">
+                <li className="info-data-link">
+                <span className="info-data-top">
+                  <b style={{color:'#ff5f3e'}}> { this.state.count } </b>个
+                </span>
+                  <span className="info-data-bottom">我的优惠</span>
+                </li>
+              </Link>
+              <Link to="/balance">
+                <li className="info-data-link">
+                <span className="info-data-top">
+                  <b style={{color:'#6ac20b'}}> {this.state.pointNumber} </b>分
+                </span>
+                  <span className="info-data-bottom">我的积分</span>
+                </li>
+              </Link>
+
+            </ul>
+
+          </section>
+          <section className="profile-1reTe">
+            <Link to="/order" className="myorder">
+              <div className="myorder-div">
+                <span>我的订单</span>
+                <span className="myorder-divsvg">
+                   <i className="fa fa-angle-right" aria-hidden="true"></i>
+                </span>
+              </div>
+            </Link>
+            <a href='https://home.m.duiba.com.cn/#/chome/index' className="myorder">
+              <div className="myorder-div">
+                <span>会员积分</span>
+                <span className="myorder-divsvg">
+                   <i className="fa fa-angle-right" aria-hidden="true"></i>
+                </span>
+              </div>
+            </a>
+            <Link to="/vipcard" className="myorder">
+              <div className="myorder-div">
+                <span>饿了吗会员卡</span>
+                <span className="myorder-divsvg">
+                   <i className="fa fa-angle-right" aria-hidden="true"></i>
+                </span>
+              </div>
+            </Link>
+          </section>
+          <section className="profile-1reTe">
+            <Link to="/service" className="myorder">
+              <div className="myorder-div">
+                <span>服务中心</span>
+                <span className="myorder-divsvg">
+                   <i className="fa fa-angle-right" aria-hidden="true"></i>
+                </span>
+              </div>
+            </Link>
+            <Link to="/download" className="myorder">
+              <div className="myorder-div">
+                <span>下载饿了么APP</span>
+                <span className="myorder-divsvg">
+                   <i className="fa fa-angle-right" aria-hidden="true"></i>
+                </span>
+              </div>
+            </Link>
+          </section>
+        </section>
+        <FootGuide></FootGuide>
+      </div>
+    )
+  }
+}
+
+export default Profile;

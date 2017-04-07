@@ -100,6 +100,36 @@ let foodActivity = (latitude, longitude) => fetch('GET', '/shopping/v1/restauran
   kw: ''
 });
 
+//获取短信验证码
+
+let mobileCode = phone => fetch('POST', '/v4/mobile/verify_code/send', {
+  mobile: phone,
+  scene: 'login',
+  type: 'sms'
+});
+
+//账号密码登录
+
+let accountLogin = (username, password, captcha_code) => fetch('POST', '/v2/login', {username, password, captcha_code});
+
+
+let getcaptchas = () => fetch('POST', '/v1/captchas', {});
+
+//检测账号是否存在
+
+let checkExsis = (checkNumber, type) => fetch('GET', '/v1/users/exists', {
+  [type]: checkNumber,
+  type
+});
+
+//手机号登录
+let sendLogin = (code, mobile, validate_token) => fetch('POST', '/v1/login/app_mobile', {
+	code,
+	mobile,
+	validate_token
+});
+
+
 export {cityGuess,
   hotCity,
   groupCity,
@@ -111,5 +141,10 @@ export {cityGuess,
   searchRestaurant,
   foodCategory,
   foodDelivery,
-  foodActivity
+  foodActivity,
+  mobileCode,
+  getcaptchas,
+  accountLogin,
+  checkExsis,
+  sendLogin
 }

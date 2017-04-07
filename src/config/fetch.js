@@ -29,7 +29,7 @@ export default async (type = 'GET', url = '', data = {}, method = 'fetch') => {
       cache: 'force-cache'
     }
     if (type === 'POST') {
-      Object.defineProperties(requestConfig, 'body', {
+      Object.defineProperty(requestConfig, 'body', {
         value: JSON.stringify(data)
       })
     }

@@ -1,6 +1,7 @@
 
 export const SAVE_GEOHASH_ACTION = 'SAVE_GEOHASH_ACTION';
 export const SAVE_LATLNT_ACTION = 'SAVE_LATLNT_ACTION';
+export const SAVE_USER_INFO = 'SAVE_USER_INFO';
 
 //保存geohash的action
 export function saveGeohashAction(geohash) {
@@ -14,5 +15,12 @@ export function saveLatLntActions(res) {
   return {
     type: 'SAVE_LATLNT_ACTION',
     res: res
+  }
+}
+
+export function saveUserInfoActions(userInfo) {
+  return {
+    type: SAVE_USER_INFO,
+    userInfo: userInfo
   }
 }

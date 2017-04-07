@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import {SAVE_GEOHASH_ACTION, SAVE_LATLNT_ACTION} from '../actions';
+import {SAVE_GEOHASH_ACTION, SAVE_LATLNT_ACTION, SAVE_USER_INFO} from '../actions';
 import { routerReducer } from 'react-router-redux';
 
 
@@ -23,10 +23,22 @@ function SaveLatLen(state = {}, action) {
   }
 }
 
+function SaveUserInfo(state = {}, action) {
+  switch (action.type) {
+    case SAVE_USER_INFO:
+      return Object.assign({}, state, {
+        res: action['userInfo']
+      })
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
   geohash: Geohash,
   routing: routerReducer,
-  savelatlnt: SaveLatLen
+  savelatlnt: SaveLatLen,
+  userInfo: SaveUserInfo
 });
 
 export default rootReducer;
