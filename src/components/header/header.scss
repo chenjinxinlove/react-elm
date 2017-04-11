@@ -1,16 +1,40 @@
 @import '../../styles/mixin';
 
-#head_top {
+#head_top{
   background-color: $blue;
   position: fixed;
   z-index: 100;
   left: 0;
   top: 0;
+  color: #ffffff!important;
   @include wh(100%, 1.95rem);
 }
-.head_goback {
+.head_goback{
   left: 0.4rem;
-  @include wh(0.6rem, 0.8rem);
+  @include wh(0.6rem, 0.5rem);
   line-height: 2.2rem;
-  margin-left: 4rem;
+  margin-left: .7rem;
+}
+.head_login{
+  right: 0.55rem;
+  @include sc(0.65rem, #fff);
+  @include ct;
+
+}
+.login_span{
+  color: #fff;
+}
+.user_avatar{
+  fill: #fff;
+  @include wh(.8rem, .8rem);
+}
+.title_head{
+  @include fj(center);
+  color: #fff;
+  text-align: center;
+  .title_text{
+    @include sc(0.8rem, #fff);
+    text-align: center;
+    font-weight: bold;
+  }
 }

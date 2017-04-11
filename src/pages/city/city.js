@@ -5,6 +5,7 @@ import './city.scss';
 import React, {Component} from 'react';
 
 import Header from 'components/header/index.js';
+import { Link } from 'react-router';
 import { currentCity, searchPlace } from '../../service/getData';
 import { getStore, setStore } from '../../config/mUtils';
 
@@ -92,7 +93,9 @@ class City extends Component {
   render() {
     return (
       <div className="city_container">
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header  headTitle={this.state.cityName} goBack='true' goBackFun={ this.props.router }>
+          <Link to="/home" name="changecity" className="change_city">切换城市</Link>
+        </Header>
         <form action="" className="city_form">
           <div>
             <input type="search" className="city_input input_style" placeholder="输入学校、商业楼、地址" required onChange={this.inputChange}/>

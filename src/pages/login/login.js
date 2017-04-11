@@ -61,6 +61,11 @@ class Login extends Component {
   componentDidMount (){
     this.captchaCodeImg()
   }
+  changeLoginWay = () => {
+    this.setState({
+      loginWay : !this.state.loginWay
+    });
+  };
 
   //获取验证码
   async captchaCodeImg () {
@@ -205,7 +210,9 @@ class Login extends Component {
   render() {
     return (
       <div className="loginContainer">
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header headTitle={ this.state.loginWay ? '登录':'密码登录' } goBack='true' goBackFun={ this.props.router }>
+          <div name="changeLogin" className="change_login" onClick={this.changeLoginWay}>{this.state.loginWay? "密码登录":"短信登录"}</div>
+        </Header>
         {
           this.state.loginWay ?
             <div className="loginForm">

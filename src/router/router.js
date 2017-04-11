@@ -51,6 +51,18 @@ const Forget = (location, cb) => {
   },'forget')
 };
 
+const Download = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/download/download').default)
+  },'download')
+};
+
+const Service = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/service/service').default)
+  },'service')
+};
+
 const routes = (
   <Route>
     <Route path="/" component={App}>
@@ -64,6 +76,8 @@ const routes = (
     <Route path="/profile" getComponent= { Profile }></Route>
     <Route path="/login" getComponent= { Login }></Route>
     <Route path="/forget" getComponent= { Forget }></Route>
+    <Route path="/download" getComponent= { Download }></Route>
+    <Route path="/service" getComponent= { Service }></Route>
   </Route>
 );
 export default routes;

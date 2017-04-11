@@ -122,7 +122,7 @@ class Search extends Component {
   render () {
     return (
       <div className="paddingTop">
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header  headTitle='搜索' goBack='true' goBackFun={ this.props.router }></Header>
         <form action="" className="search_form">
           <input type="search" name="search" className="search_input" placeholder="请输入商家或美食名称"  onChange={ this.checkInput }/>
           <input type="button" name="submit" value="提交" className="search_submit" onClick={ this.submitBtn.bind({},'') } />

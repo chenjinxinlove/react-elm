@@ -40,6 +40,9 @@ class Home extends React.Component {
     })
 
   }
+  reload = () => {
+    window.location.reload();
+  }
 
   render () {
     let { hotCity, guessCityid, guessCity, groupCity}  = this.state;
@@ -54,7 +57,9 @@ class Home extends React.Component {
     };
     return (
       <div>
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header signinUp='home'>
+          <span name='logo' className="head_logo"  onClick={ this.reload}>ele.me</span>
+        </Header>
         <nav className="city_nav">
           <div className="city_tip">
             <span>但前定位城市：</span>

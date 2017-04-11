@@ -163,7 +163,7 @@ class Forget extends Component {
   render() {
     return (
       <div className="restContainer">
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header headTitle='重置密码' goBack='true' goBackFun={ this.props.router }></Header>
         <div className="restForm">
           <section className="input_container phone_number">
             <input type="text" placeholder="手机号" name="phone" onChange={ this.getPhoneNumber }/>

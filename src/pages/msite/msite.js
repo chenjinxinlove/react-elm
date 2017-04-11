@@ -75,7 +75,14 @@ class Msite extends Component {
   render() {
     return (
       <div>
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header signinUp='msite'>
+          <Link to={'/search/' + this.state.geohash} className="link_search" name="search">
+            <i className="fa fa-search" style={{color: '#fff'}} aria-hidden="true"></i>
+          </Link>
+          <Link to="/home" name="msite-title" className="msite_title">
+            <span className="title_text ellipsis">{this.state.msietTitle}</span>
+          </Link>
+        </Header>
         <nav className="msite_nav">
           <div className="swiper-container">
             <div className="swiper-wrapper">

@@ -32,7 +32,7 @@ class Profile extends Component {
     let userInfo = this.props.userInfo;
     return (
       <div>
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header headTitle={this.state.profiletitle} goBack='true' goBackFun={ this.props.router }></Header>
         <section>
           <section className="profile-number">
             {
