@@ -12,7 +12,8 @@ import RatingStar from 'components/common/RatingStar';
 import {msiteAdress, shopDetails, foodMenu, getRatingList, ratingScores, ratingTags} from '../../service/getData';
 import { saveLatLntActions } from '../../actions';
 import {getImgPath} from '../../plugins/mixin';
-import BScroll from 'better-scroll'
+import BScroll from 'better-scroll';
+import classNames from 'classnames';
 
 class Shop extends Component {
   constructor(props){
@@ -37,7 +38,10 @@ class Shop extends Component {
       shopListTop: [], //商品列表的高度集合
       wrapperMenu: null,
       foodScroll: null,  //食品列表scroll
-      TitleDetailIndex: null, //点击展示列表头部详情
+      TitleDetailIndex: null, //点击展示列表头部详情,
+      receiveInCart: false,//购物车组件下落的原点是否到达目标位置
+      totalPrice: 0,//总共价格
+      cartFoodList: [],//购物车商品列表
     }
   }
 
@@ -49,7 +53,21 @@ class Shop extends Component {
     //初始化购物车
   }
 
+  totalNum = () => {
+    let num = 0;
+    this.state.cartFoodList.forEach(item => {
+      num += item.num
+    })
+    return num;
+  }
 
+  deliveryFee = () => {
+    if (this.state.shopDetailData) {
+      return this.state.shopDetailData.float_delivery_fee;
+    } else {
+      return null
+    }
+  }
 
   componentDidMount() {
     this.initData();
@@ -84,6 +102,14 @@ class Shop extends Component {
     // this.RECORD_SHOPDETAIL(this.shopDetailData)
     // //隐藏加载动画
     this.hideLoading();
+  }
+
+  mininumOrderAmount = () => {
+    if (this.state.shopDetailData) {
+      return this.state.shopDetailData.float_minimum_order_amount - this.state.totalPrice;
+    } else {
+      return null
+    }
   }
 
   showActivitiesFun = () => {
@@ -178,6 +204,7 @@ class Shop extends Component {
   }
   render() {
     let shopDetailData = this.state.shopDetailData;
+
     return (
     <div>
       {
@@ -310,7 +337,7 @@ class Shop extends Component {
                                                   <strong className="description_foodname">{foods.name}</strong>
                                                   {
                                                     foods.attributes.length?
-                                                      <ul  class="attributes_ul">
+                                                      <ul  className="attributes_ul">
                                                         {
                                                           foods.attributes.map((attribute, foodi) => {
                                                             return (
@@ -351,6 +378,28 @@ class Shop extends Component {
                           })
                         }
                       </ul>
+                    </section>
+                  </section>
+                  <section className="buy_cart_container">
+                    <section className="cart_icon_num" onClick={this.toggleCartList}>
+                      <div className={classNames({"cart_icon_container": true, "cart_icon_activity":this.state.totalPrice > 0,"move_in_cart" : this.state.receiveInCart })} ref="carContainer">
+                        {
+                          this.state.totalNum ? <span className="cart_list_length">{this.totalNum()}</span> : ''
+                        }
+                        <svg className="cart_icon">
+
+                        </svg>
+                      </div>
+                      <div className="cart_num">
+                        <div>¥{ this.totalPrice }</div>
+                        <div>配送费¥{ this.deliveryFee() }</div>
+                      </div>
+                    </section>
+                    <section className={classNames({gotopay: true, gotopay_acitvity : this.mininumOrderAmount() <= 0})}>
+                      {
+                        this.mininumOrderAmount() > 0 ? <span className="gotopay_button_style">还差{ this.mininumOrderAmount() }起送</span> :
+                          <Link to={{pathname:"/confirmOrder", query: {shopId: this.state.shopId, geohash: this.state.geohash }}} className="gotopay_button_style">去结算</Link>
+                      }
                     </section>
                   </section>
                 </section>
