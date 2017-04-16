@@ -16,13 +16,13 @@ const dfltPort = 8002;
  */
 function getDefaultModules() {
   return {
-    preLoaders: [
-      {
-        test: /\.(js|jsx)$/,
-        include: srcPath,
-        loader: 'eslint-loader'
-      }
-    ],
+    // preLoaders: [
+    //   {
+    //     test: /\.(js|jsx)$/,
+    //     include: srcPath,
+    //     loader: 'eslint-loader'
+    //   }
+    // ],
     loaders: [
       {
         test: /\.css$/,

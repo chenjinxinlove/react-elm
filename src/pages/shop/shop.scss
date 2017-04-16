@@ -1,0 +1,382 @@
+@import "../../styles/mixin";
+
+.shop_container{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  left:0;
+  height: 100%;
+}
+.shop_detail_header{
+  overflow: hidden;
+  position: relative;
+  .header_cover_img{
+    width: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 9;
+    filter:blur(10px)
+  }
+  .description_header{
+    position: relative;
+    z-index: 10;
+    background-color: rgba(119,103,137,.43);
+    padding: 0.4rem 0 0.4rem 0.4rem;
+    width: 100%;
+    overflow: hidden;
+    .description_top{
+      display: flex;
+      .description_left{
+        margin-right: 0.3rem;
+        img{
+          @include wh(2.9rem, 2.9rem);
+          display: block;
+          border-radius: 0.15rem;
+        }
+      }
+      .description_right{
+        flex: 1;
+        .description_title{
+          @include sc(.8rem, #fff);
+          font-weight: bold;
+          width: 100%;
+          margin-bottom: 0.3rem;
+        }
+        .description_text{
+          @include sc(.5rem, #fff);
+          margin-bottom: 0.3rem;
+        }
+        .description_promotion{
+          @include sc(.5rem, #fff);
+          width: 11.5rem;
+        }
+      }
+      .description_arrow{
+        @include ct;
+        right: 0.3rem;
+        z-index: 11;
+      }
+    }
+    .description_footer{
+      @include fj;
+      margin-top: 0.5rem;
+      padding-right: 1rem;
+      p{
+        @include sc(.5rem, #fff);
+        span{
+          color: #fff;
+        }
+        .tip_icon{
+          padding: 0 .04rem;
+          border: 0.025rem solid #fff;
+          border-radius: 0.1rem;
+          font-size: .4rem;
+          display: inline-block;
+        }
+      }
+      .ellipsis{
+        width: 84%;
+      }
+      .footer_arrow{
+        @include wh(.45rem, .45rem);
+        position: absolute;
+        right: .3rem;
+      }
+    }
+  }
+}
+.activities_details{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(38, 38, 38, 0.93);
+  z-index: 200;
+  padding: 1.25rem;
+  .activities_shoptitle{
+    text-align: center;
+    @include sc(.8rem, #fff);
+  }
+  .activities_ratingstar{
+    display: flex;
+    justify-content: center;
+    transform: scale(2.2);
+    margin-top: .7rem;
+  }
+  .activities_list{
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    @include sc(.5rem, #fff);
+    li{
+      margin-bottom: .2rem;
+      .activities_icon{
+        padding: 0 .02rem;
+        display: inline-block;
+        border: 0.025rem solid #fff;
+        border-radius: 0.1rem;
+      }
+      span{
+        color: #fff;
+        line-height: .6rem;
+      }
+    }
+  }
+  .activities_shopinfo{
+    p{
+      line-height: .7rem;
+      @include sc(.5rem, #fff);
+    }
+  }
+  .activities_title_style{
+    text-align: center;
+    margin-bottom: 1rem;
+    span{
+      @include sc(.5rem, #fff);
+      border: 0.025rem solid #555;
+      padding: .2rem .4rem;
+      border-radius: 0.5rem;
+    }
+
+  }
+  .close_activities{
+    position: absolute;
+    bottom: 1rem;
+    @include cl;
+  }
+}
+.change_show_type{
+  display: flex;
+  background-color: #fff;
+  padding: .3rem 0 .6rem;
+  border-bottom: 1px solid #ebebeb;
+  div{
+    flex: 1;
+    text-align: center;
+    span{
+      @include sc(.65rem, #666);
+      padding: .2rem .1rem;
+      border-bottom: 0.12rem solid #fff;
+    }
+    .activity_show{
+      color: #3190e8;
+      border-color: #3190e8;
+    }
+  }
+}
+.food_container{
+  display: flex;
+  flex: 1;
+  padding-bottom: 2rem;
+}
+.menu_container{
+  display: flex;
+  flex: 1;
+  overflow-y: hidden;
+  .menu_left{
+    background-color: #f8f8f8;
+    width: 3.8rem;
+    .menu_left_li{
+      padding: .7rem .3rem;
+      border-bottom: 0.025rem solid #ededed;
+      box-sizing: border-box;
+      border-left: 0.15rem solid #f8f8f8;
+      position: relative;
+      img{
+        @include wh(.5rem, .6rem);
+      }
+      span{
+        @include sc(.6rem, #666);
+      }
+      .category_num{
+        position: absolute;
+        top: .1rem;
+        right: .1rem;
+        background-color: #ff461d;
+        line-height: .6rem;
+        text-align: center;
+        border-radius: 50%;
+        border: 0.025rem solid #ff461d;
+        min-width: .6rem;
+        height: .6rem;
+        @include sc(.5rem, #fff);
+        font-family: Helvetica Neue,Tahoma,Arial;
+      }
+    }
+    .activity_menu{
+      border-left: 0.15rem solid #3190e8;
+      background-color: #fff;
+      span:nth-of-type(1){
+        font-weight: bold;
+      }
+    }
+  }
+  .menu_right{
+    flex: 4;
+    overflow-y: auto;
+    .menu_detail_header{
+      width: 100%;
+      padding: .4rem;
+      position: relative;
+      @include fj;
+      align-items: center;
+      .menu_detail_header_left{
+        width: 11rem;
+        white-space: nowrap;
+        overflow: hidden;
+        .menu_item_title{
+          @include sc(.7rem, #666);
+          font-weight: bold;
+        }
+        .menu_item_description{
+          @include sc(.5rem, #999);
+          width: 30%;
+          overflow: hidden;
+        }
+      }
+      .menu_detail_header_right{
+        @include wh(.5rem, 1rem);
+        display: block;
+        //@include bis('../../images/icon_point.png');
+        background-size: 100% .4rem;
+        background-position: left center;
+      }
+      .description_tip{
+        background-color: #39373a;
+        opacity: 0.95;
+        @include sc(.5rem, #fff);
+        position: absolute;
+        top: 1.5rem;
+        z-index: 14;
+        width: 8rem;
+        right: .2rem;
+        padding: .5rem .4rem;
+        border: 1px;
+        border-radius: .2rem;
+        span{
+          color: #fff;
+          line-height: .6rem;
+          font-size: .55rem;
+        }
+      }
+      .description_tip::after{
+        content: '';
+        position: absolute;
+        @include wh(.4rem, .4rem);
+        background-color: #39373a;
+        top: -.5rem;
+        right: .7rem;
+        transform: rotate(-45deg) translateY(.41rem);
+      }
+    }
+    .menu_detail_list{
+      background-color: #fff;
+      padding: .6rem .4rem;
+      border-bottom: 1px solid #f8f8f8;
+      position: relative;
+      overflow: hidden;
+      .menu_detail_link{
+        display:flex;
+        .menu_food_img{
+          margin-right: .4rem;
+          img{
+            @include wh(2rem, 2rem);
+            display: block;
+          }
+        }
+        .menu_food_description{
+          width: 100%;
+          .food_description_head{
+            @include fj;
+            margin-bottom: .2rem;
+            .description_foodname{
+              @include sc(.7rem, #333);
+            }
+            .attributes_ul{
+              display: flex;
+              li{
+                font-size: .3rem;
+                height: .6rem;
+                line-height: .35rem;
+                padding: .1rem;
+                border: 1px solid #666;
+                border-radius: 0.3rem;
+                margin-right: .1rem;
+                transform: scale(.8);
+                p{
+                  white-space: nowrap;
+                  line-height: .4rem;
+                }
+              }
+              .attribute_new{
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-color: #4cd964;
+                @include wh(2rem, 2rem);
+                display: flex;
+                align-items: flex-end;
+                transform: rotate(-45deg) translate(-.1rem, -1.5rem);
+                border: none;
+                border-radius: 0;
+                p{
+                  @include sc(.4rem, #fff);
+                  text-align: center;
+                  flex: 1;
+                }
+              }
+            }
+          }
+          .food_description_content{
+            @include sc(.5rem, #999);
+            line-height: .6rem;
+          }
+          .food_description_sale_rating{
+            line-height: .8rem;
+            span{
+              @include sc(.5rem, #333);
+            }
+          }
+          .food_activity{
+            line-height: .4rem;
+            span{
+              font-size: .3rem;
+              border: 1px solid currentColor;
+              border-radius: 0.3rem;
+              padding: .08rem;
+              display: inline-block;
+              transform: scale(.8);
+              margin-left: -0.35rem;
+
+            }
+          }
+        }
+      }
+      .menu_detail_footer{
+        margin-left: 2.4rem;
+        font-size: 0;
+        margin-top: .3rem;
+        @include fj;
+        .food_price{
+          span{
+            font-family: 'Helvetica Neue',Tahoma,Arial;
+          }
+          span:nth-of-type(1){
+            @include sc(.5rem, #f60);
+            margin-right: .05rem;
+          }
+          span:nth-of-type(2){
+            @include sc(.7rem, #f60);
+            font-weight: bold;
+            margin-right: .3rem;
+          }
+          span:nth-of-type(3){
+            @include sc(.5rem, #666);
+          }
+        }
+      }
+    }
+  }
+}

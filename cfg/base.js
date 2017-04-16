@@ -45,6 +45,10 @@ module.exports = {
         target: 'https://mainsite-restapi.ele.me',
         changeOrigin: true
       },
+      '/ugc':{
+        target: 'https://mainsite-restapi.ele.me',
+        changeOrigin: true
+      },
     }
   },
   resolve: {

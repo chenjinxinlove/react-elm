@@ -2,7 +2,20 @@
  * Created by chenjinxin on 2017/3/25.
  */
 import fetch from '../config/fetch';
-
+import * as home from './tempdata/home'
+import * as city from './tempdata/city'
+import * as msite from './tempdata/msite'
+import * as search from './tempdata/search'
+import * as food from './tempdata/food'
+import * as shop from './tempdata/shop'
+import * as login from './tempdata/login'
+import * as confirm from './tempdata/confirm'
+import * as order from './tempdata/order'
+import * as service from './tempdata/service'
+import * as addDetail from './tempdata/addDetail'
+import * as addresspart from './tempdata/address'
+import * as vip from './tempdata/vip'
+import * as hongbao from './tempdata/hongbao'
 
 // 获取首页默认地址
 let cityGuess = () => fetch('GET', '/v1/cities', {
@@ -142,6 +155,53 @@ let sendMobile = (sendData, captcha_code, type, password) => fetch('POST', '/v1/
   password,
 });
 
+/**
+ * 获取food页面的商家属性活动列表
+ */
+
+let foodMenu = restaurant_id => fetch('GET', '/shopping/v2/menu', {
+  restaurant_id
+});
+
+/**
+ * 获取商铺评价列表
+ */
+
+let getRatingList = (offset, tag_name = '') => fetch('GET', '/ugc/v2/restaurants/834828/ratings', {
+  has_content: true,
+  offset,
+  limit: 10,
+  tag_name
+});
+
+/**
+ * 获取商铺评价分数
+ */
+
+let ratingScores = shopid => fetch('GET', '/ugc/v2/restaurants/' + shopid + '/ratings/scores', {});
+
+
+/**
+ * 获取商铺评价分类
+ */
+
+let ratingTags = shopid => fetch('GET', '/ugc/v2/restaurants/' + shopid + '/ratings/tags', {});
+
+
+/**
+ * 创建临时数据
+ */
+const setpromise = data => {
+  return new Promise((resolve, reject) => {
+    resolve(data)
+  })
+}
+
+let shopDetails = (shopid, latitude, longitude) => fetch('GET', '/shopping/restaurant/' + shopid, {
+  latitude,
+  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
+});
+
 export {cityGuess,
   hotCity,
   groupCity,
@@ -159,5 +219,10 @@ export {cityGuess,
   accountLogin,
   checkExsis,
   sendLogin,
-  sendMobile
+  sendMobile,
+  shopDetails,
+  foodMenu,
+  getRatingList,
+  ratingScores,
+  ratingTags
 }
