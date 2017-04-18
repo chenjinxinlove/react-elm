@@ -50,8 +50,12 @@ class Shop extends Component {
       showSpecs: false,//控制显示食品规格
       specsIndex: 0, //当前选中的规格索引值
       upDate: false,//更新
-
+      cartList: this.props.cartList,//监听购物车变化
     }
+  }
+
+  componentWillReceiveProps(){
+    this.initCategoryNum()
   }
 
   componentWillMount() {
@@ -59,8 +63,7 @@ class Shop extends Component {
       geohash: this.props.location.query.geohash,
       shopId: this.props.location.query.id
     })
-    //初始化购物车
-    this.initCategoryNum();
+
   }
 
 
@@ -97,6 +100,8 @@ class Shop extends Component {
     this.setState({
       windowHeight: window.innerHeight
     })
+    //初始化购物车
+    this.initCategoryNum();
   }
 
   async initData(){
@@ -191,44 +196,64 @@ class Shop extends Component {
     }
   }
 
+  chartUpdate = () => {
+    this.initCategoryNum()
+  }
+
+  shopCart = () => {
+    return Object.assign({},this.state.cartList[this.props.shopId]);
+  }
+
   /**
    * 初始化和shopCart变化时，重新获取购物车改变过的数据，赋值 categoryNum，totalPrice，cartFoodList，整个数据流是自上而下的形式，所有的购物车数据都交给vuex统一管理，包括购物车组件中自身的商品数量，使整个数据流更加清晰
    */
   initCategoryNum(){
     let newArr = [];
     let cartFoodNum = 0;
-    this.totalPrice = 0;
-    this.cartFoodList = [];
-    this.menuList.forEach((item, index) => {
-      if (this.shopCart&&this.shopCart[item.foods[0].category_id]) {
+
+    this.setState({
+       totalPrice : 0,
+       cartFoodList : []
+    })
+
+    this.state.menuList.forEach((item, index) => {
+      if (this.shopCart()&&this.shopCart()[item.foods[0].category_id]) {
         let num = 0;
-        Object.keys(this.shopCart[item.foods[0].category_id]).forEach(itemid => {
-          Object.keys(this.shopCart[item.foods[0].category_id][itemid]).forEach(foodid => {
-            let foodItem = this.shopCart[item.foods[0].category_id][itemid][foodid];
+        Object.keys(this.shopCart()[item.foods[0].category_id]).forEach(itemid => {
+          Object.keys(this.shopCart()[item.foods[0].category_id][itemid]).forEach(foodid => {
+            let foodItem = this.shopCart()[item.foods[0].category_id][itemid][foodid];
             num += foodItem.num;
             if (item.type == 1) {
-              this.totalPrice += foodItem.num*foodItem.price;
+              let totalPrice = this.state.totalPrice +  foodItem.num*foodItem.price;
+              let cartFoodList = {};
               if (foodItem.num > 0) {
-                this.cartFoodList[cartFoodNum] = {};
-                this.cartFoodList[cartFoodNum].category_id = item.foods[0].category_id;
-                this.cartFoodList[cartFoodNum].item_id = itemid;
-                this.cartFoodList[cartFoodNum].food_id = foodid;
-                this.cartFoodList[cartFoodNum].num = foodItem.num;
-                this.cartFoodList[cartFoodNum].price = foodItem.price;
-                this.cartFoodList[cartFoodNum].name = foodItem.name;
-                this.cartFoodList[cartFoodNum].specs = foodItem.specs;
+                cartFoodList[cartFoodNum] = {};
+                cartFoodList[cartFoodNum].category_id = item.foods[0].category_id;
+                cartFoodList[cartFoodNum].item_id = itemid;
+                cartFoodList[cartFoodNum].food_id = foodid;
+                cartFoodList[cartFoodNum].num = foodItem.num;
+                cartFoodList[cartFoodNum].price = foodItem.price;
+                cartFoodList[cartFoodNum].name = foodItem.name;
+                cartFoodList[cartFoodNum].specs = foodItem.specs;
                 cartFoodNum ++;
               }
+              this.setState({
+                cartFoodList: cartFoodList
+              })
             }
           })
-        })
+        });
         newArr[index] = num;
+
       }else{
         newArr[index] = 0;
       }
     })
-    this.totalPrice = this.totalPrice.toFixed(2);
-    this.categoryNum = [...newArr];
+    this.setState({
+      totalPrice: this.state.totalPrice,
+      categoryNum : [...newArr]
+    })
+
   }
 
   getFoodListHeight(){
@@ -309,6 +334,7 @@ class Shop extends Component {
     let shopDetailData = this.state.shopDetailData;
     let choosedFoods = this.state.choosedFoods;
     let specsIndex = this.state.specsIndex;
+
     return (
     <div>
       {
@@ -555,7 +581,8 @@ class Shop extends Component {
 
 function mapStateToProps(state) {
   return {
-    savelatlnt : state.savelatlnt
+    savelatlnt : state.savelatlnt,
+    cartList : state.cartList
   }
 }
 
