@@ -8,12 +8,14 @@ import { Link } from 'react-router';
 
 import Loading from 'components/common/Loading';
 import RatingStar from 'components/common/RatingStar';
+import BuyCart from 'components/common/BuyCart';
 
 import {msiteAdress, shopDetails, foodMenu, getRatingList, ratingScores, ratingTags} from '../../service/getData';
-import { saveLatLntActions } from '../../actions';
+import { saveLatLntActions ,addCartActions, removeCartActions} from '../../actions';
 import {getImgPath} from '../../plugins/mixin';
 import BScroll from 'better-scroll';
 import classNames from 'classnames';
+
 
 class Shop extends Component {
   constructor(props){
@@ -42,6 +44,13 @@ class Shop extends Component {
       receiveInCart: false,//购物车组件下落的原点是否到达目标位置
       totalPrice: 0,//总共价格
       cartFoodList: [],//购物车商品列表
+      showMoveDot: [],//控制下落的小圆点显示隐藏
+      choosedFoods: null, //当前选中食品数据
+      showDeleteTip: false, //多规格商品点击减按钮，弹出提示框
+      showSpecs: false,//控制显示食品规格
+      specsIndex: 0, //当前选中的规格索引值
+      upDate: false,//更新
+
     }
   }
 
@@ -51,6 +60,20 @@ class Shop extends Component {
       shopId: this.props.location.query.id
     })
     //初始化购物车
+    this.initCategoryNum();
+  }
+
+
+  showChooseList = (foods) => {
+    let choosedFoods = null;
+    if (foods) {
+      choosedFoods = foods
+    }
+    this.setState({
+      choosedFoods : choosedFoods,
+      showSpecs: !this.state.showSpecs,
+      specsIndex : 0
+    })
   }
 
   totalNum = () => {
@@ -104,12 +127,52 @@ class Shop extends Component {
     this.hideLoading();
   }
 
+  //显示下落圆球
+  showMoveDotFun = (showMoveDot, elLeft, elBottom) => {
+    let showM = [...this.state.showMoveDot, ...showMoveDot];
+    this.setState({
+      showMoveDot: showM, elLeft, elBottom
+    })
+  }
+  //显示提示，无法减去商品
+  showReduceTip(){
+    this.setState({
+      showDeleteTip : true
+    })
+    clearTimeout(this.state.timer);
+    let timer = setTimeout(() => {
+      clearTimeout(this.state.timer);
+      this.setState({
+        showDeleteTip : false
+      })
+    }, 3000);
+    this.setState({
+      timer
+    })
+  }
+
   mininumOrderAmount = () => {
     if (this.state.shopDetailData) {
       return this.state.shopDetailData.float_minimum_order_amount - this.state.totalPrice;
     } else {
       return null
     }
+  }
+
+  //记录当前所选规格的索引值
+  chooseSpecs = (index) => {
+    this.setState({
+      specsIndex : index
+    })
+  }
+
+  //多规格商品加入购物车
+  addSpecs = (category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock) => {
+    this.props.addCart({shopid: this.state.shopId, category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock});
+    this.showChooseList();
+    this.setState({
+      upDate: !this.state.upDate
+    })
   }
 
   showActivitiesFun = () => {
@@ -126,6 +189,46 @@ class Shop extends Component {
       this.getFoodListHeight();
       // this.initCategoryNum();
     }
+  }
+
+  /**
+   * 初始化和shopCart变化时，重新获取购物车改变过的数据，赋值 categoryNum，totalPrice，cartFoodList，整个数据流是自上而下的形式，所有的购物车数据都交给vuex统一管理，包括购物车组件中自身的商品数量，使整个数据流更加清晰
+   */
+  initCategoryNum(){
+    let newArr = [];
+    let cartFoodNum = 0;
+    this.totalPrice = 0;
+    this.cartFoodList = [];
+    this.menuList.forEach((item, index) => {
+      if (this.shopCart&&this.shopCart[item.foods[0].category_id]) {
+        let num = 0;
+        Object.keys(this.shopCart[item.foods[0].category_id]).forEach(itemid => {
+          Object.keys(this.shopCart[item.foods[0].category_id][itemid]).forEach(foodid => {
+            let foodItem = this.shopCart[item.foods[0].category_id][itemid][foodid];
+            num += foodItem.num;
+            if (item.type == 1) {
+              this.totalPrice += foodItem.num*foodItem.price;
+              if (foodItem.num > 0) {
+                this.cartFoodList[cartFoodNum] = {};
+                this.cartFoodList[cartFoodNum].category_id = item.foods[0].category_id;
+                this.cartFoodList[cartFoodNum].item_id = itemid;
+                this.cartFoodList[cartFoodNum].food_id = foodid;
+                this.cartFoodList[cartFoodNum].num = foodItem.num;
+                this.cartFoodList[cartFoodNum].price = foodItem.price;
+                this.cartFoodList[cartFoodNum].name = foodItem.name;
+                this.cartFoodList[cartFoodNum].specs = foodItem.specs;
+                cartFoodNum ++;
+              }
+            }
+          })
+        })
+        newArr[index] = num;
+      }else{
+        newArr[index] = 0;
+      }
+    })
+    this.totalPrice = this.totalPrice.toFixed(2);
+    this.categoryNum = [...newArr];
   }
 
   getFoodListHeight(){
@@ -204,7 +307,8 @@ class Shop extends Component {
   }
   render() {
     let shopDetailData = this.state.shopDetailData;
-
+    let choosedFoods = this.state.choosedFoods;
+    let specsIndex = this.state.specsIndex;
     return (
     <div>
       {
@@ -328,36 +432,33 @@ class Shop extends Component {
                                     return (
                                       <section key={foodindex} className="menu_detail_list"><Link to={{pathname: 'shop/foodDetail', query:{image_path:foods.image_path, description: foods.description, month_sales: foods.month_sales, name: foods.name, rating: foods.rating, rating_count: foods.rating_count, satisfy_rate: foods.satisfy_rate, foods, shopId :this.state.shopId}}} >
                                         <div  className="menu_detail_link">
-
-                                              <section className="menu_food_img">
-                                                <img src={getImgPath(foods.image_path)}/>
-                                              </section>
-                                              <section className="menu_food_description">
-                                                <h3 className="food_description_head">
-                                                  <strong className="description_foodname">{foods.name}</strong>
-                                                  {
-                                                    foods.attributes.length?
-                                                      <ul  className="attributes_ul">
-                                                        {
-                                                          foods.attributes.map((attribute, foodi) => {
-                                                            return (
-                                                              <li key={foodi} style={{color: '#' + attribute.icon_color,borderColor:'#' +attribute.icon_color}}  className={ attribute.icon_name == '新' ?  'attribute_new': '' }>
-                                                               <p style={{color: attribute.icon_name == '新'? '#fff' : '#' + attribute.icon_color}}>{attribute.icon_name == '新'? '新品':attribute.icon_name}</p>
-                                                              </li>
-                                                            )
-                                                          })
-                                                        }
-                                                      </ul> : ''
-                                                  }
-
-                                                 </h3>
-                                                <p className="food_description_content">{foods.description}</p>
-                                                <p className="food_description_sale_rating">
-                                                  <span>月售{foods.month_sales}份</span>
-                                                  <span>好评率{foods.satisfy_rate}%</span>
-                                                 </p>
-                                               </section>
-
+                                          <section className="menu_food_img">
+                                            <img src={getImgPath(foods.image_path)}/>
+                                          </section>
+                                          <section className="menu_food_description">
+                                            <h3 className="food_description_head">
+                                              <strong className="description_foodname">{foods.name}</strong>
+                                              {
+                                                foods.attributes.length?
+                                                  <ul  className="attributes_ul">
+                                                    {
+                                                      foods.attributes.map((attribute, foodi) => {
+                                                        return (
+                                                          <li key={foodi} style={{color: '#' + attribute.icon_color,borderColor:'#' +attribute.icon_color}}  className={ attribute.icon_name == '新' ?  'attribute_new': '' }>
+                                                           <p style={{color: attribute.icon_name == '新'? '#fff' : '#' + attribute.icon_color}}>{attribute.icon_name == '新'? '新品':attribute.icon_name}</p>
+                                                          </li>
+                                                        )
+                                                      })
+                                                    }
+                                                  </ul> : ''
+                                              }
+                                             </h3>
+                                            <p className="food_description_content">{foods.description}</p>
+                                            <p className="food_description_sale_rating">
+                                              <span>月售{foods.month_sales}份</span>
+                                              <span>好评率{foods.satisfy_rate}%</span>
+                                             </p>
+                                           </section>
                                         </div></Link>
                                         <footer className="menu_detail_footer">
                                           <section className="food_price">
@@ -366,8 +467,8 @@ class Shop extends Component {
                                             {
                                               foods.specifications.length? <span >起</span> : ''
                                             }
-
                                           </section>
+                                          <BuyCart upDate = {this.state.upDate }shopId={this.state.shopId} foods={foods} moveInCart={this.listenInCart} showChooseList={this.showChooseList} showReduceTip={this.showReduceTip} showMoveDot={this.showMoveDotFun}></BuyCart>
                                          </footer>
                                        </section>
                                     )
@@ -386,9 +487,7 @@ class Shop extends Component {
                         {
                           this.state.totalNum ? <span className="cart_list_length">{this.totalNum()}</span> : ''
                         }
-                        <svg className="cart_icon">
-
-                        </svg>
+                        <i className="fa fa-shopping-cart cart_icon  " style={{color: '#ffffff', fontSize: '29px'}} aria-hidden="true"></i>
                       </div>
                       <div className="cart_num">
                         <div>¥{ this.totalPrice }</div>
@@ -410,6 +509,43 @@ class Shop extends Component {
 
           </section>: ''
       }
+      {
+        this.state.showSpecs ? <div className="specs_cover" onClick={this.showChooseList} ></div> : ''
+      }
+      {
+        this.state.showSpecs ?
+          <div className="specs_list">
+            <header className="specs_list_header">
+              <h4 className="ellipsis">{choosedFoods.name}</h4>
+              <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1"className="specs_cancel" onClick={this.showChooseList}>
+                <line x1="0" y1="0" x2="16" y2="16"  stroke="#666" strokeWidth="1.2"/>
+                <line x1="0" y1="16" x2="16" y2="0"  stroke="#666" strokeWidth="1.2"/>
+              </svg>
+            </header>
+            <section className="specs_details">
+             <h5 className="specs_details_title">{choosedFoods.specifications[0].name}</h5>
+             <ul>
+               {
+                 choosedFoods.specifications[0].values.map((item, indexItem) => {
+                  return (
+                    <li key={indexItem} className={indexItem == this.state.specsIndex ? 'specs_activity' : '' } onClick={this.chooseSpecs.bind({},indexItem)}>
+                      {item}
+                    </li>
+                  )
+               })
+
+               }
+             </ul>
+            </section>
+            <footer className="specs_footer">
+              <div className="specs_price">
+                <span>¥ </span>
+                <span>{this.state.choosedFoods.specfoods[specsIndex].price}</span>
+              </div>
+              <div className="specs_addto_cart" onClick={this.addSpecs.bind({},choosedFoods.category_id, choosedFoods.item_id, choosedFoods.specfoods[specsIndex].food_id, choosedFoods.specfoods[specsIndex].name, choosedFoods.specfoods[specsIndex].price, choosedFoods.specifications[0].values[specsIndex], choosedFoods.specfoods[specsIndex].packing_fee, choosedFoods.specfoods[specsIndex].sku_id, choosedFoods.specfoods[specsIndex].stock)}>加入购物车</div>
+            </footer>
+          </div> : ''
+      }
 
     </div>
 
@@ -425,7 +561,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    saveLatLnt: (res) => dispatch(saveLatLntActions(res))
+    saveLatLnt: (res) => dispatch(saveLatLntActions(res)),
+    addCart: (res) => dispatch(addCartActions(res)),
+    removeCart: (res) => dispatch(removeCartActions(res))
   }
 }
 

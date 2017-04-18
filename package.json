@@ -77,7 +77,6 @@
   },
   "dependencies": {
     "better-scroll": "^0.1.15",
-    "classname": "0.0.0",
     "classnames": "^2.2.5",
     "core-js": "^2.0.0",
     "md5": "^2.2.1",
