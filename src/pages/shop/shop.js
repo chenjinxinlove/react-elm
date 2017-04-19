@@ -51,7 +51,10 @@ class Shop extends Component {
       specsIndex: 0, //当前选中的规格索引值
       upDate: false,//更新
       cartList: this.props.cartList,//监听购物车变化
+      ratingTageIndex: 0, //评价分类索引
+
     }
+    this.changeTgeIndex = this.changeTgeIndex.bind(this);
   }
 
   componentWillReceiveProps(){
@@ -319,6 +322,24 @@ class Shop extends Component {
     })
   }
 
+  //获取不同类型的评论列表
+  async changeTgeIndex (index, name){
+    this.setState({
+      ratingTageIndex : index,
+      ratingOffset : 0,
+      ratingTagName : name
+    });
+
+    let res = await getRatingList(this.state.ratingOffset, name);
+    this.setState({
+      ratingList : [...res]
+    })
+    // this.
+    // this.$nextTick(() => {
+    //   this.ratingScroll.refresh();
+    // })
+  }
+
   showTitleDetail = (index) =>{
     let  TitleDetailIndex;
     if (this.state.TitleDetailIndex == index) {
@@ -334,6 +355,7 @@ class Shop extends Component {
     let shopDetailData = this.state.shopDetailData;
     let choosedFoods = this.state.choosedFoods;
     let specsIndex = this.state.specsIndex;
+    let ratingScoresData = this.state.ratingScoresData;
 
     return (
     <div>
@@ -444,7 +466,7 @@ class Shop extends Component {
                                     <strong className="menu_item_title">{item.name}</strong>
                                     <span className="menu_item_description">{item.description}</span>
                                   </section>
-                                  <span className="menu_detail_header_right" onClick={this.showTitleDetail.bind({},index)}></span>
+                                  <span className="menu_detail_header_right"></span>
                                   {
                                     this.state.TitleDetailIndex === index ?
                                     <p className="description_tip" >
@@ -456,7 +478,7 @@ class Shop extends Component {
                                 {
                                   item.foods.map((foods, foodindex) => {
                                     return (
-                                      <section key={foodindex} className="menu_detail_list"><Link to={{pathname: 'shop/foodDetail', query:{image_path:foods.image_path, description: foods.description, month_sales: foods.month_sales, name: foods.name, rating: foods.rating, rating_count: foods.rating_count, satisfy_rate: foods.satisfy_rate, foods, shopId :this.state.shopId}}} >
+                                      <section key={foodindex} className="menu_detail_list">
                                         <div  className="menu_detail_link">
                                           <section className="menu_food_img">
                                             <img src={getImgPath(foods.image_path)}/>
@@ -485,7 +507,7 @@ class Shop extends Component {
                                               <span>好评率{foods.satisfy_rate}%</span>
                                              </p>
                                            </section>
-                                        </div></Link>
+                                        </div>
                                         <footer className="menu_detail_footer">
                                           <section className="food_price">
                                             <span>¥</span>
@@ -530,8 +552,89 @@ class Shop extends Component {
                 </section>
                 :''
             }
-
-
+            {
+              //评价
+              this.state.changeShowType === 'rating' ?
+                <section className="rating_container" id="ratingContainer" style={{width: '100%'}}>
+                  <section>
+                    <header className="rating_header">
+                      <section className="rating_header_left">
+                        <p>{shopDetailData.rating}</p>
+                        <p>综合评价</p>
+                        <p>高于周边商家{(ratingScoresData.compare_rating*100).toFixed(1)}%</p>
+                      </section>
+                      <section className="rating_header_right">
+                        <p>
+                          <span>服务态度</span>
+                            <RatingStar rating={ratingScoresData.service_score}></RatingStar>
+                          <span className="rating_num">{ratingScoresData.service_score.toFixed(1)}</span>
+                        </p>
+                        <p>
+                          <span>菜品评价</span>
+                          <RatingStar rating={ratingScoresData.food_score}></RatingStar>
+                          <span className="rating_num">{ratingScoresData.food_score.toFixed(1)}</span>
+                        </p>
+                        <p>
+                          <span>送达时间</span>
+                          <span className="delivery_time">{shopDetailData.order_lead_time}分钟</span>
+                        </p>
+                      </section>
+                    </header>
+                    <ul className="tag_list_ul">
+                      {
+                        this.state.ratingTagsList.map((item, index) => {
+                          return(
+                            <li  key={index} className={ classNames({unsatisfied: item.unsatisfied, tagActivity: this.state.ratingTageIndex == index})} onClick={this.changeTgeIndex.bind({},index, item.name)}>{item.name}({item.count})</li>
+                          )
+                        })
+                      }
+                    </ul>
+                    <ul className="rating_list_ul">
+                      {
+                        this.state.ratingList.map(function (item, index) {
+                          return(
+                            <li key={index} className="rating_list_li">
+                            <img src={getImgPath(item.avatar)} className="user_avatar"/>
+                            <section className="rating_list_details">
+                              <header>
+                                <section className="username_star">
+                                  <p className="username">{item.username}</p>
+                                  <p className="star_desc">
+                                    <RatingStar rating={item.rating_star}></RatingStar>
+                                    <span className="time_spent_desc">{item.time_spent_desc}</span>
+                                  </p>
+                                </section>
+                              <time className="rated_at">{item.rated_at}</time>
+                              </header>
+                                <ul className="food_img_ul">
+                                  {
+                                    item.item_ratings.map((item, index) => {
+                                      return(
+                                        <li key={index}>
+                                          <img src={getImgPath(item.image_hash)} />
+                                      　</li>
+                                      )
+                                 　　})
+                                  }
+                                </ul>
+                              <ul className="food_name_ul">
+                                {
+                                  item.item_ratings.map((item, index) => {
+                                    return(
+                                      <li key={index} className="ellipsis">{ item.food_name}</li>
+                                    )
+                                  })
+                                }
+                              </ul>
+                            </section>
+                          </li>
+                          )
+                        })
+                      }
+                    </ul>
+                  </section>
+                </section> : ''
+            }
 
           </section>: ''
       }
@@ -559,7 +662,6 @@ class Shop extends Component {
                     </li>
                   )
                })
-
                }
              </ul>
             </section>

@@ -27,12 +27,28 @@ function SaveLatLen(state = {}, action) {
   }
 }
 
-function SaveUserInfo(state = {}, action) {
+let mr = {
+  avatar: '',
+  username : '登录/注册',
+  mobile : '登录后享受更多特权',
+  balance : '0',
+  gift_amount :  '0',
+  point : '0',
+  count: '0',
+  pointNumber : '0',
+  user_id:'656666'
+}
+
+function SaveUserInfo(state = mr, action) {
   switch (action.type) {
     case SAVE_USER_INFO:
-      return Object.assign({}, state, {
-        res: action['userInfo']
-      })
+      let info = action['userInfo'];
+      let validity = 30;
+      let now = new Date();
+      now.setTime(now.getTime() + validity * 24 * 60 * 60 * 1000);
+      document.cookie = "USERID=" + info.user_id + ";expires=" + now.toGMTString();
+      document.cookie = "SID=huRyTRd9QLij7NkbpHJoj3PQrx1eRiO6bAiw" + ";expires=" + now.toGMTString();
+      return Object.assign({}, state, info)
     default:
       return state
   }

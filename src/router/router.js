@@ -69,6 +69,12 @@ const Shop = (location, cb) => {
   },'shop')
 };
 
+const Order = (location, cb) => {
+  require.ensure([], require => {
+    cb(null, require('../pages/order/order').default)
+  },'order')
+};
+
 const routes = (
   <Route>
     <Route path="/" component={App}>
@@ -85,6 +91,7 @@ const routes = (
     <Route path="/download" getComponent= { Download }></Route>
     <Route path="/service" getComponent= { Service }></Route>
     <Route path="/shop" getComponent= { Shop }></Route>
+    <Route path="/order" getComponent= { Order }></Route>
   </Route>
 );
 export default routes;

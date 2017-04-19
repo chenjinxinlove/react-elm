@@ -202,6 +202,16 @@ let shopDetails = (shopid, latitude, longitude) => fetch('GET', '/shopping/resta
   longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
 });
 
+// /**
+//  * 获取订单列表
+//  */
+
+// var getOrderList = (user_id, offset) => fetch('GET', '/bos/v2/users/' + user_id + '/orders', {
+//   limit: 10,
+//   offset,
+// });
+var getOrderList = (user_id, offset) => setpromise(order.orderList);
+
 export {cityGuess,
   hotCity,
   groupCity,
@@ -224,5 +234,6 @@ export {cityGuess,
   foodMenu,
   getRatingList,
   ratingScores,
-  ratingTags
+  ratingTags,
+  getOrderList
 }

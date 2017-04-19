@@ -49,6 +49,10 @@ module.exports = {
         target: 'https://mainsite-restapi.ele.me',
         changeOrigin: true
       },
+      '/bos':{
+        target: 'https://mainsite-restapi.ele.me',
+        changeOrigin: true
+      }
     }
   },
   resolve: {

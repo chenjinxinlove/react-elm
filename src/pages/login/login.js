@@ -64,7 +64,7 @@ class Login extends Component {
   changeLoginWay = () => {
     this.setState({
       loginWay : !this.state.loginWay
-    });
+    }); 
   };
 
   //获取验证码

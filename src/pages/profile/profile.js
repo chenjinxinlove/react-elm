@@ -4,6 +4,7 @@
 import './profile.scss';
 import React, {Component} from 'react';
 import { Link } from 'react-router';
+import {connect} from 'react-redux';
 
 import Header from 'components/header/index.js';
 import FootGuide from 'components/footer/footGuide.js';
@@ -14,46 +15,51 @@ class Profile extends Component {
     super(props);
     this.state = {
       profiletitle: '我的',
-      getUserinfo: {},        //得到数据
-      username: '登录/注册',           //用户名
-      resetname: '',
-      mobile: '登录后享受更多特权',             //电话号码
-      balance: 0,            //我的余额
-      count : 0,             //优惠券个数
-      pointNumber : 0,       //积分数
-      avatar: ''             //头像地址
-    }
+      resetname: ''
+    };
     this.parseInt = this.parseInt.bind(this);
   }
   parseInt(num) {
 
   }
+  imgpath = () => {
+
+  }
   render() {
     let userInfo = this.props.userInfo;
+    let {
+      avatar,
+      username,
+      mobile,
+      balance,
+      gift_amount,
+      count,
+      pointNumber,
+      point} =  userInfo;
     return (
       <div>
         <Header headTitle={this.state.profiletitle} goBack='true' goBackFun={ this.props.router }></Header>
         <section>
           <section className="profile-number">
             {
-              <Link className="profile-link" to={  !userInfo ? '/profile/info': '/profile-link' }>
+              <Link className="profile-link" to={  userInfo.user_id ? '/profile/info': '/login' }>
                 {
-                  this.state.avatar ? <img src={ userInfo.imgpath } alt="" className="privateImage"/>:
+                  avatar ? <img src={ this.imgpath } alt="" className="privateImage"/>:
                     <span className="privateImage">
-                      <i className="fa fa-user-circle-o" aria-hidden="true"></i>
+                      <i className="fa fa-user"  style={{fontSize: '50px',color:'#fff',margin:'5px 1px 15px 10px'}} aria-hidden="true"></i>
                     </span>
                 }
                 <div className="user-info">
-                  <p>{ this.state.username }</p>
+                  <p>{ username }</p>
                   <p>
                     <span className="user-icon">
                       <i className="fa fa-mobile" aria-hidden="true"></i>
                     </span>
-                    <span className="icon-mobile-number">{ this.state.mobile }</span>
+                    <span className="icon-mobile-number">{ mobile }</span>
                   </p>
                 </div>
                 <span className="arrow">
-                  <i className="fa fa-angle-right" aria-hidden="true"></i>
+                  <i className="fa fa-angle-right" style={{color:'#fff'}} aria-hidden="true"></i>
                 </span>
               </Link>
             }
@@ -63,7 +69,7 @@ class Profile extends Component {
               <Link to="/balance">
                 <li className="info-data-link">
                 <span className="info-data-top">
-                  <b> { parseInt(this.state.balance).toFixed(2) } </b>元
+                  <b> { parseInt(balance).toFixed(2) } </b>元
                 </span>
                   <span className="info-data-bottom">我的余额</span>
                 </li>
@@ -71,7 +77,7 @@ class Profile extends Component {
               <Link to="/benefit">
                 <li className="info-data-link">
                 <span className="info-data-top">
-                  <b style={{color:'#ff5f3e'}}> { this.state.count } </b>个
+                  <b style={{color:'#ff5f3e'}}> { count } </b>个
                 </span>
                   <span className="info-data-bottom">我的优惠</span>
                 </li>
@@ -79,7 +85,7 @@ class Profile extends Component {
               <Link to="/balance">
                 <li className="info-data-link">
                 <span className="info-data-top">
-                  <b style={{color:'#6ac20b'}}> {this.state.pointNumber} </b>分
+                  <b style={{color:'#6ac20b'}}> {point} </b>分
                 </span>
                   <span className="info-data-bottom">我的积分</span>
                 </li>
@@ -139,4 +145,10 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+function mapStateToProps(state) {
+  return {
+    userInfo: state.userInfo
+  }
+}
+
+export default connect(mapStateToProps)(Profile);
