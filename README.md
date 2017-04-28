@@ -15,6 +15,7 @@
    npm run clean   清理dist目录
    npm run dist    发布
    npm start   开发
+   
 
 ```
 

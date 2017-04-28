@@ -12,22 +12,27 @@ import { saveLatLntActions } from '../../actions';
 
 import {msiteAdress, foodCategory, foodDelivery, foodActivity} from '../../service/getData'
 import {getImgPath} from '../../plugins/mixin';
+import ShopList from 'components/common/ShopList/index.js';
 
 class Food extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      headTitle: '',
-      sortBy: '',// 筛选的条件
+      geohash: '', // city页面传递过来的地址geohash
+      headTitle: '', // msiet页面头部标题
       foodTitle: '', // 排序左侧头部标题
-      category: null, // category分类左侧数据,
+      restaurant_category_id: '', // 食品类型id值
+      restaurant_category_ids: '', //筛选类型的id
+      sortBy: '', // 筛选的条件
+      category: null, // category分类左侧数据
       categoryDetail: null, // category分类右侧的详细数据
-      restaurant_category_ids: null,
-      sortByType: null, // 根据何种方式排序,
+      sortByType: null, // 根据何种方式排序
       Delivery: null, // 配送方式数据
       Activity: null, // 商家支持活动数据
       delivery_mode: null, // 选中的配送方式
       support_ids: [], // 选中的商铺活动列表
+      filterNum: 0, // 所选中的所有样式的集合
+      confirmStatus: false, // 确认选择
     }
     this.chooseType = this.chooseType.bind(this);
     this.selectCategoryName = this.selectCategoryName.bind(this);
@@ -91,6 +96,66 @@ class Food extends Component {
   getCategoryIds() {
 
   }
+
+  //筛选选项中的配送方式选择
+  selectDeliveryMode = (id) => {
+    //delivery_mode为空时，选中当前项，并且filterNum加一
+    let filterNum = this.state.filterNum;
+    let delivery_mode;
+    if (this.state.delivery_mode == null) {
+      filterNum++;
+      delivery_mode = id;
+      //delivery_mode为当前已有值时，清空所选项，并且filterNum减一
+    }else if(this.state.delivery_mode == id){
+      filterNum--;
+      delivery_mode = null;
+      //delivery_mode已有值且不等于当前选择值，则赋值delivery_mode为当前所选id
+    }else{
+      delivery_mode = id;
+    }
+    this.setState({
+      filterNum: filterNum,
+      delivery_mode: delivery_mode
+    })
+  }
+
+  //点击商家活动，状态取反
+  selectSupportIds = (index,id) => {
+    //数组替换新的值
+    let support_ids = this.state.support_ids;
+    support_ids.splice(index, 1, {status: !support_ids[index].status, id: id});
+    //重新计算filterNum的个数
+    let filterNum = this.state.delivery_mode == null? 0 : 1;
+    support_ids.forEach(item => {
+      if (item.status) {
+        filterNum ++ ;
+      }
+    })
+    this.setState({
+      filterNum,
+      support_ids
+    })
+  }
+  //点击取消或者确认时，需要清空当前已选的状态值
+  clearAll = () => {
+    let support_ids = this.state.support_ids;
+    support_ids = support_ids.map(item => item.status = false);
+    this.setState({
+      delivery_mode : null,
+      support_ids,
+      filterNum : 0
+    })
+  }
+  //点击确认时，将需要筛选的id值传递给子组件，并且收回列表
+  confirmSelectFun = () => {
+    //状态改变时，因为子组件进行了监听，会重新获取数据进行筛选
+
+    this.setState({
+      confirmStatus : !this.state.confirmStatus,
+      sortBy : ''
+    })
+  }
+
   chooseType (type) {
     if (this.state.sortBy !== type) {
       //food选项中头部标题发生改变，需要特殊处理
@@ -125,7 +190,7 @@ render() {
 
     return (
       <div className="food_container">
-        <Header signinUp='home' headTitle='ddd' goBack='ddd' userInfo="ddd"></Header>
+        <Header headTitle={ this.state.headTitle } goBack='true' goBackFun={ this.props.router }></Header>
         <section className ='sort_container' >
           <div className={ this.state.sortBy === 'food' ? 'choose_type sort_item' : 'sort_item' } >
             <div className="sort_item_container" onClick={ this.chooseType.bind({}, 'food') }>
@@ -192,32 +257,32 @@ render() {
                 this.state.sortBy === 'sort' ?
                   <section className="sort_detail_type">
                       <ul className="sort_list_container">
-                        <li class="sort_list_li">
+                        <li className="sort_list_li">
                            <p data="0" className={this.state.sortByType == 0 ? 'sort_select': '' }>
                             <span>智能排序</span>
                            </p>
                         </li>
-                        <li class="sort_list_li">
+                        <li className="sort_list_li">
                           <p data="5" className={this.state.sortByType == 5 ? 'sort_select': '' }>
                             <span>距离最近</span>
                           </p>
                         </li>
-                        <li class="sort_list_li">
+                        <li className="sort_list_li">
                           <p data="6" className={this.state.sortByType == 6 ? 'sort_select': '' }>
                             <span>销量最高</span>
                           </p>
                         </li>
-                        <li class="sort_list_li">
+                        <li className="sort_list_li">
                           <p data="1" className={this.state.sortByType == 1 ? 'sort_select': '' }>
                             <span>起送价最低</span>
                           </p>
                         </li>
-                        <li class="sort_list_li">
+                        <li className="sort_list_li">
                           <p data="2" className={this.state.sortByType == 2 ? 'sort_select': '' }>
                             <span>配送速度最快</span>
                           </p>
                         </li>
-                        <li class="sort_list_li">
+                        <li className="sort_list_li">
                           <p data="3" className={this.state.sortByType == 3 ? 'sort_select': '' }>
                             <span>评分最高</span>
                           </p>
@@ -228,6 +293,65 @@ render() {
               }
             </section>
           </div>
+          <div className={ this.state.sortBy === 'activity' ? 'choose_type sort_item' : 'sort_item' } >
+            <div className="sort_item_container" onClick={ this.chooseType.bind({}, 'activity') }>
+              <div className="sort_item_border">
+                <span className={ this.state.sortBy === 'activity' ? 'category_title' : ''  }>筛选</span>
+              </div>
+            </div>
+            <section>
+              {
+                this.state.sortBy === 'activity' ?
+                  <section className="sort_detail_type filter_container">
+                    <section style={{width: '100%'}}>
+                      <header className="filter_header_style">配送方式</header>
+                      <ul className="filter_ul">
+                        {
+                          this.state.Delivery.map((item) => {
+                            return (
+                              <li key={item.id} className="filter_li" onClick={this.selectDeliveryMode({},item.id)}>
+                                 <span className={this.state.delivery_mode == item.id ? 'selected_filter' : ''}>{item.text}</span>
+                              </li>
+                            )
+                          })
+                        }
+
+                       </ul>
+                    </section>
+                    <section style={{width: '100%'}}>
+                    <header className="filter_header_style">商家属性（可以多选）</header>
+                    <ul className="filter_ul" style={{paddingBottom: '.5rem'}}>
+                      {
+                        this.state.Activity.map( (item, index) =>{
+                          return(
+                               <li key={item.id} className="filter_li" onClick={this.selectSupportIds({}, index, item.id)}>
+                                 {
+                                   !this.state.support_ids[index].status ? <span className="filter_icon" style={{color: '#' + item.icon_color, borderColor: '#' + item.icon_color}} >{item.icon_name}</span> : ''
+                                 }
+
+                                 <span className={this.state.support_ids[index].status ? 'selected_filter' : '' }>{item.name}</span>
+                               </li>
+                            )
+                        } )
+                      }
+                    </ul>
+                  </section>
+                    <footer className="confirm_filter">
+                    <div className="clear_all filter_button_style" onClick={this.clearAll}>清空</div>
+                    <div className="confirm_select filter_button_style" onClick={this.confirmSelectFun}>确定
+                      {
+                        this.state.filterNum ?  <span>({this.state.filterNum})</span> : ''
+                      }
+                    </div>
+                  </footer>
+                  </section>
+                  :''
+              }
+            </section>
+          </div>
+        </section>
+        <section className="shop_list_container">
+          <ShopList geohash={this.state.geohash} restaurantCategoryId={this.state.restaurant_category_id} restaurantCategoryIds={this.state.restaurant_category_ids} sortByType={this.state.sortByType} deliveryMode={this.state.delivery_mode} confirmSelect={this.state.confirmStatus} supportIds={this.state.support}_ids  DidConfrim={this.clearAll}></ShopList>
         </section>
       </div>
     )
