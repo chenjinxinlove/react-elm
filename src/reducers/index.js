@@ -36,7 +36,7 @@ let mr = {
   point : '0',
   count: '0',
   pointNumber : '0',
-  user_id:'656666'
+  user_id:''
 }
 
 function SaveUserInfo(state = mr, action) {
