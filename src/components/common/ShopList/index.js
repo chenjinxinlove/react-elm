@@ -30,8 +30,9 @@ class ShopList extends Component {
   componentWillMount() {
     let that = this;
     const latLnt = this.props.res;
+    const { restaurantCategoryId, restaurantCategoryIds, sortByType, deliveryMode, supportIds, confirmSelect, geohash } = this.props;
     async function getDataInit() {
-      let res = await shopList(latLnt.latitude, latLnt.longitude);
+      let res = await shopList(latLnt.latitude, latLnt.longitude, restaurantCategoryId, this.state.offset);
       that.setState({
         shopListArr: [...res],
         showLoading: false
@@ -39,7 +40,6 @@ class ShopList extends Component {
     }
     getDataInit();
   }
-
   // componentDidMount() {
   //   showBack(status => {
   //     this.setState({
