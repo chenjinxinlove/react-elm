@@ -29,6 +29,7 @@ class ShopList extends Component {
 
   componentWillMount() {
     let that = this;
+    
     const latLnt = this.props.res;
     const { restaurantCategoryId, restaurantCategoryIds, sortByType, deliveryMode, supportIds, confirmSelect, geohash } = this.props;
     async function getDataInit() {
