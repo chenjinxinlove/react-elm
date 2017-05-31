@@ -12,7 +12,7 @@ import { hashHistory } from 'react-router'
 const loggerMiddleware = createLogger();
 const reduxRouterMiddleware = routerMiddleware(hashHistory);
 
-export default function configure(preloadedState) {
+ function configure(preloadedState) {
   return createStore(
     rootReducer,
     preloadedState,
@@ -25,3 +25,5 @@ export default function configure(preloadedState) {
     )
   )
 }
+const store = configure();
+export default store;

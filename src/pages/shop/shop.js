@@ -5,13 +5,14 @@ import './shop.scss';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import store from '../../stores/configureStore';
 
 import Loading from 'components/common/Loading';
 import RatingStar from 'components/common/RatingStar';
 import BuyCart from 'components/common/BuyCart';
 
 import {msiteAdress, shopDetails, foodMenu, getRatingList, ratingScores, ratingTags} from '../../service/getData';
-import { saveLatLntActions ,addCartActions, removeCartActions} from '../../actions';
+import { saveLatLntActions ,addCartActions, removeCartActions, clearCartActions} from '../../actions';
 import {getImgPath} from '../../plugins/mixin';
 import BScroll from 'better-scroll';
 import classNames from 'classnames';
@@ -57,18 +58,16 @@ class Shop extends Component {
     this.changeTgeIndex = this.changeTgeIndex.bind(this);
   }
 
-  componentWillReceiveProps(){
-    this.initCategoryNum()
-  }
+  // componentWillReceiveProps(){
+  //   this.initCategoryNum()
+  // }
 
   componentWillMount() {
     this.setState({
       geohash: this.props.location.query.geohash,
       shopId: this.props.location.query.id
     })
-
   }
-
 
   showChooseList = (foods) => {
     let choosedFoods = null;
@@ -102,7 +101,10 @@ class Shop extends Component {
     this.initData();
     this.setState({
       windowHeight: window.innerHeight
-    })
+    });
+    store.subscribe(() =>{
+      this.initCategoryNum();
+    });
     //初始化购物车
     this.initCategoryNum();
   }
@@ -204,11 +206,11 @@ class Shop extends Component {
   }
 
   shopCart = () => {
-    return Object.assign({},this.state.cartList[this.props.shopId]);
+    return Object.assign({},this.props.cartList[this.state.shopId]);
   }
 
   /**
-   * 初始化和shopCart变化时，重新获取购物车改变过的数据，赋值 categoryNum，totalPrice，cartFoodList，整个数据流是自上而下的形式，所有的购物车数据都交给vuex统一管理，包括购物车组件中自身的商品数量，使整个数据流更加清晰
+   * 初始化和shopCart变化时，重新获取购物车改变过的数据，赋值 categoryNum，totalPrice，cartFoodList，整个数据流是自上而下的形式，所有的购物车数据都交给统一管理，包括购物车组件中自身的商品数量，使整个数据流更加清晰
    */
   initCategoryNum(){
     let newArr = [];
@@ -217,8 +219,9 @@ class Shop extends Component {
     this.setState({
        totalPrice : 0,
        cartFoodList : []
-    })
+    });
 
+    let totalPrice = 0;
     this.state.menuList.forEach((item, index) => {
       if (this.shopCart()&&this.shopCart()[item.foods[0].category_id]) {
         let num = 0;
@@ -227,8 +230,8 @@ class Shop extends Component {
             let foodItem = this.shopCart()[item.foods[0].category_id][itemid][foodid];
             num += foodItem.num;
             if (item.type == 1) {
-              let totalPrice = this.state.totalPrice +  foodItem.num*foodItem.price;
-              let cartFoodList = {};
+              totalPrice +=  foodItem.num * foodItem.price;
+              let cartFoodList = this.state.cartFoodList;
               if (foodItem.num > 0) {
                 cartFoodList[cartFoodNum] = {};
                 cartFoodList[cartFoodNum].category_id = item.foods[0].category_id;
@@ -251,9 +254,12 @@ class Shop extends Component {
       }else{
         newArr[index] = 0;
       }
-    })
+    });
+
+
+
     this.setState({
-      totalPrice: this.state.totalPrice,
+      totalPrice: totalPrice.toFixed(2),
       categoryNum : [...newArr]
     })
 
@@ -320,6 +326,27 @@ class Shop extends Component {
         menuIndexChange : true
       })
     })
+  }
+
+  toggleCartList = () => {
+    let showCartList;
+    this.state.cartFoodList.length ? showCartList = !this.state.showCartList : true;
+    this.setState({
+      showCartList
+    })
+  };
+
+  removeOutCart = (category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock) => {
+      this.props.removeCart({shopid: this.state.shopId, category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock});
+  }
+  //加入购物车，计算按钮位置。
+  addToCart = (category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock, e) => {
+    this.props.addCart({shopid: this.state.shopId, category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock});
+  }
+
+  clearCart = () => {
+    this.toggleCartList();
+    this.props.clearCart(this.state.shopId);
   }
 
   //获取不同类型的评论列表
@@ -538,7 +565,7 @@ class Shop extends Component {
                         <i className="fa fa-shopping-cart cart_icon  " style={{color: '#ffffff', fontSize: '29px'}} aria-hidden="true"></i>
                       </div>
                       <div className="cart_num">
-                        <div>¥{ this.totalPrice }</div>
+                        <div>¥{ this.state.totalPrice }</div>
                         <div>配送费¥{ this.deliveryFee() }</div>
                       </div>
                     </section>
@@ -549,6 +576,49 @@ class Shop extends Component {
                       }
                     </section>
                   </section>
+                  {this.state.showCartList&&this.state.cartFoodList.length ?
+                    <section className="cart_food_list" >
+                      <header>
+                        <h4>购物车</h4>
+                        <div onClick={this.clearCart}>
+                        <span className="clear_cart">清空</span>
+                      </div>
+                    </header>
+                    <section className="cart_food_details" id="cartFood">
+                      <ul>
+                        {
+                          this.state.cartFoodList.map((item, index) => {
+                            return (
+                              <li key={index} className="cart_food_li" >
+                                <div className="cart_list_num">
+                                  <p className="ellipsis">{item.name}</p>
+                                  <p className="ellipsis">{item.specs}</p>
+                                </div>
+                                <div className="cart_list_price">
+                                  <span>¥</span>
+                                  <span>{item.price}</span>
+                                </div>
+                                <section className="cart_list_control">
+                                  <span onClick={this.removeOutCart.bind({},item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)}>
+                                    <i className="fa fa-minus-circle" style={{color:'#19C2FF', fontSize: '21px'}} aria-hidden="true"></i>
+                                  </span>
+                                <span className="cart_num">{item.num}</span>
+                                <span className="cart_add" onClick={this.addToCart.bind({},item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)}>
+                                  <i className="fa fa-plus-circle" style={{color:'#19C2FF',fontSize: '21px'}} aria-hidden="true"></i>
+                                </span>
+                            </section>
+                              </li>
+                            )
+                          })
+                        }
+                      </ul>
+                    </section>
+                    </section>
+                    :''
+
+                  }
+
+
                 </section>
                 :''
             }
@@ -692,7 +762,8 @@ function mapDispatchToProps(dispatch) {
   return {
     saveLatLnt: (res) => dispatch(saveLatLntActions(res)),
     addCart: (res) => dispatch(addCartActions(res)),
-    removeCart: (res) => dispatch(removeCartActions(res))
+    removeCart: (res) => dispatch(removeCartActions(res)),
+    clearCart: (res) => dispatch(clearCartActions(res))
   }
 }
 

@@ -4,6 +4,7 @@ export const SAVE_LATLNT_ACTION = 'SAVE_LATLNT_ACTION';
 export const SAVE_USER_INFO = 'SAVE_USER_INFO';
 export const ADD_CART = 'ADD_CART';
 export const REMOVE_CART = 'REMOVE_CART';
+export const CLEAR_CART = 'CLEAR_CART';
 
 //保存geohash的action
 export function saveGeohashAction(geohash) {
@@ -35,8 +36,15 @@ export function addCartActions(cartItem) {
 }
 
 export function removeCartActions(cartItem) {
-  return { 
+  return {
     type: REMOVE_CART,
     cartItem : cartItem
+  }
+}
+
+export function clearCartActions(showId) {
+  return {
+    type: CLEAR_CART,
+    showId: showId
   }
 }

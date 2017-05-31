@@ -5,6 +5,7 @@
 import './index.scss';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import store from '../../../stores/configureStore';
 
 import { addCartActions, removeCartActions } from './../../../actions';
 
@@ -21,7 +22,7 @@ class BuyCart extends Component {
   showReduceTip = () => {
     this.props.showReduceTip()
   }
-  
+
   removeOutCart = (category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock) => {
     if (this.state.foodNum > 0) {
       this.props.removeCart({shopid: this.props.shopId, category_id, item_id, food_id, name, price, specs, packing_fee, sku_id, stock});
@@ -43,8 +44,10 @@ class BuyCart extends Component {
 
   }
 
-  componentWillReceiveProps() {
-    this.sUpdate();
+  componentDidMount() {
+    store.subscribe(() =>{
+      this.sUpdate();
+    });
   }
 
   sUpdate() {

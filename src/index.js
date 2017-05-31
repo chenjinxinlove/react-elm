@@ -6,12 +6,10 @@ import { Provider } from 'react-redux';
 import FastClick from 'fastclick';
 import { Router, hashHistory } from 'react-router';
 import routes from './router/router';
-import configureStore from './stores/configureStore';
+import store from './stores/configureStore';
 import { syncHistoryWithStore } from 'react-router-redux';
 import './config/rem';
 
-
-const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
 
 history.listen(function (location) { return location });

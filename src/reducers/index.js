@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import {SAVE_GEOHASH_ACTION, SAVE_LATLNT_ACTION, SAVE_USER_INFO, ADD_CART, REMOVE_CART} from '../actions';
+import {SAVE_GEOHASH_ACTION, SAVE_LATLNT_ACTION, SAVE_USER_INFO, ADD_CART, REMOVE_CART, CLEAR_CART} from '../actions';
 import { routerReducer } from 'react-router-redux';
 import {
   setStore,
@@ -108,7 +108,6 @@ function Cart(state = {}, action) {
       var shop = (cart[shopid] || {});
       var category = (shop[category_id] || {});
       var item = (category[item_id] || {});
-      console.log(cart, shop, category,item)
       if (item && item[food_id]) {
         if (item[food_id]['num'] > 0) {
           item[food_id]['num']--;
@@ -119,6 +118,12 @@ function Cart(state = {}, action) {
         }
       }
       return cart;
+    case CLEAR_CART:
+
+      let shopid = action['showId'];
+      state[shopid] = null;
+      setStore('buyCart', state);
+      return state;
     default:
       return state
   }
