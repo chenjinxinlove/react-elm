@@ -29,11 +29,11 @@ class ShopList extends Component {
 
   componentWillMount() {
     let that = this;
-    
+
     const latLnt = this.props.res;
     const { restaurantCategoryId, restaurantCategoryIds, sortByType, deliveryMode, supportIds, confirmSelect, geohash } = this.props;
     async function getDataInit() {
-      let res = await shopList(latLnt.latitude, latLnt.longitude, restaurantCategoryId, this.state.offset);
+      let res = await shopList(latLnt.latitude, latLnt.longitude, restaurantCategoryId, that.state.offset);
       that.setState({
         shopListArr: [...res],
         showLoading: false

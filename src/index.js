@@ -18,11 +18,11 @@ history.listen(function (location) { return location });
 
 
 
-if ('addEventListener' in document) {
-  document.addEventListener('DOMContentLoaded', function () {
-    FastClick.attach(document.body);
-  }, false);
-}
+// if ('addEventListener' in document) {
+//   document.addEventListener('DOMContentLoaded', function () {
+//     FastClick.attach(document.body);
+//   }, false);
+// }
 
 
 ReactDOM.render(

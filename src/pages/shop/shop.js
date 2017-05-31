@@ -382,7 +382,7 @@ class Shop extends Component {
                   </svg>
                 </Link>
                 {
-                  shopDetailData.activities.length ?
+                  shopDetailData.activities ?
                     <footer className="description_footer" onClick={ this.showActivitiesFun }>
                       <p className="ellipsis">
                         <span className="tip_icon" style={{backgroundColor: '#' + shopDetailData.activities[0].icon_color, borderColor: '#' + shopDetailData.activities[0].icon_color}}>{shopDetailData.activities[0].icon_name}</span>

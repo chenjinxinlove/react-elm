@@ -198,8 +198,12 @@ const setpromise = data => {
 }
 
 let shopDetails = (shopid, latitude, longitude) => fetch('GET', '/shopping/restaurant/' + shopid, {
-  latitude,
-  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
+  'extras[]': 'activities',
+  'extras[]': 'albums',
+  'extras[]': 'license',
+  'extras[]': 'identification',
+  'latitude': latitude,
+  'longitude': longitude
 });
 
 // /**
