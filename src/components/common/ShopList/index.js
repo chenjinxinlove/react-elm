@@ -102,9 +102,9 @@ class ShopList extends Component {
     }
   }
 
-  // backTop = () => {
-  //   document.body.scrollTop= '0'
-  // }
+  backTop = () => {
+    animate(document.body, {scrollTop: '0'}, 400,'ease-out');
+  }
 
   //到达底部加载更多数据
   async loaderMore (){
@@ -207,7 +207,7 @@ class ShopList extends Component {
         }
         {
           this.state.showBackStatus ?
-            <aside className="return_top"   >
+            <aside className="return_top" onClick={this.backTop}  >
               <i className="fa fa-arrow-up fa-lg" aria-hidden="true"></i>
             </aside> : ''
         }
