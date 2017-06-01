@@ -69,7 +69,7 @@ class ShopList extends Component {
                         </section>
                         <hgroup className="shop_right">
                           <header className="shop_detail_header">
-                            <h4 className={item.is_premium ? 'premium' : ''} className="shop_title ellipsis">{item.name}</h4>
+                            <h4 className={item.is_premium ? 'premium shop_title ellipsis' : 'shop_title ellipsis'} >{item.name}</h4>
                             <ul className="shop_detail_ul">
                               {
                                 item.supports.map((item) => {
