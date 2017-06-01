@@ -5,13 +5,14 @@ import './index.scss';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { findDOMNode } from 'react-dom';
 
 import {shopList} from '../../../service/getData';
 import {getImgPath} from '../../../plugins/mixin';
 
 import RatingStar from '../RatingStar';
 import Loading from '../Loading';
-import {showBack, animate} from '../../../config/mUtils'
+import {showBack, animate, getStyle} from '../../../config/mUtils'
 
 
 class ShopList extends Component {
@@ -27,30 +28,112 @@ class ShopList extends Component {
     this.backTop = this.backTop.bind(this);
   }
 
-  componentWillMount() {
-    let that = this;
 
+  async componentDidMount() {
+    //开始监听scrollTop的值，达到一定程度后显示返回顶部按钮
+    showBack(status => {
+      this.setState({
+        showBackStatus : status
+      })
+    });
     const latLnt = this.props.res;
     const { restaurantCategoryId, restaurantCategoryIds, sortByType, deliveryMode, supportIds, confirmSelect, geohash } = this.props;
-    async function getDataInit() {
-      let res = await shopList(latLnt.latitude, latLnt.longitude, restaurantCategoryId, that.state.offset);
-      that.setState({
-        shopListArr: [...res],
-        showLoading: false
-      });
+    let res = await shopList(latLnt.latitude, latLnt.longitude, this.state.offset,restaurantCategoryId );
+    this.setState({
+      shopListArr: [...res],
+      showLoading: false
+    });
+    let el = window.document.getElementById('loaderMore');
+    let windowHeight = window.screen.height;
+    let height;
+    let setTop;
+    let paddingBottom;
+    let marginBottom;
+    let requestFram;
+    let oldScrollTop;
+    let scrollEl;
+    let heightEl;
+    let scrollType = el.attributes.type && el.attributes.type.value;
+    let scrollReduce = 2;
+    if (scrollType == 2) {
+      scrollEl = el;
+      heightEl = el.children[0];
+    } else {
+      scrollEl = document.body;
+      heightEl = el;
     }
-    getDataInit();
+
+    el.addEventListener('touchstart', () => {
+      height = heightEl.clientHeight;
+      if (scrollType == 2) {
+        height = height
+      }
+      setTop = el.offsetTop;
+      paddingBottom = getStyle(el, 'paddingBottom');
+      marginBottom = getStyle(el, 'marginBottom');
+    }, false)
+
+    el.addEventListener('touchmove', () => {
+      loadMore();
+    }, false)
+
+    el.addEventListener('touchend', () => {
+      oldScrollTop = scrollEl.scrollTop;
+      moveEnd();
+    }, false)
+
+    const moveEnd = () => {
+      requestFram = requestAnimationFrame(() => {
+        if (scrollEl.scrollTop != oldScrollTop) {
+          oldScrollTop = scrollEl.scrollTop;
+          moveEnd()
+        } else {
+          cancelAnimationFrame(requestFram);
+          height = heightEl.clientHeight;
+          loadMore();
+        }
+      })
+    }
+
+    const loadMore = () => {
+      if ((scrollEl.scrollTop + windowHeight) >= (height + setTop + paddingBottom + marginBottom - scrollReduce)) {
+        this.loaderMore()
+      }
+    }
   }
-  // componentDidMount() {
-  //   showBack(status => {
-  //     this.setState({
-  //       showBackStatus: status
-  //     });
-  //   });
+
+  // backTop = () => {
+  //   document.body.scrollTop= '0'
   // }
 
-  backTop() {
-    animate(document.body, {scrollTop: '0'}, 400,'ease-out');
+  //到达底部加载更多数据
+  async loaderMore (){
+    //防止重复请求
+    if (this.state.preventRepeatReuqest) {
+      return
+    }
+    let offset = this.state.offset + 20;
+    this.setState({
+      showLoading: true,
+      preventRepeatReuqest:true,
+      offset: offset
+    });
+
+    const latLnt = this.props.res;
+    const { restaurantCategoryId } = this.props;
+
+      let res = await shopList(latLnt.latitude, latLnt.longitude, offset,restaurantCategoryId );
+      this.setState({
+        shopListArr: [...this.state.shopListArr, ...res],
+        showLoading: false
+      });
+    //当获取数据小于20，说明没有更多数据，不需要再次请求数据
+    if (res.length < 20) {
+      return
+    }
+    this.setState({
+      preventRepeatReuqest: false
+    })
   }
 
   render () {
@@ -58,12 +141,12 @@ class ShopList extends Component {
       <div className="shoplist_container">
         {
           this.state.shopListArr.length ?
-            <ul>
+            <ul id="loaderMore" type="1">
               {
                 this.state.shopListArr.map((item) => {
                   return (
-                    <Link key={item.id} to={ {pathname: "shop",query:{geohash:this.props.geohash, id: item.id}}}>
-                      <li key={item.id} className="shop_li">
+                    <Link key={item.id + '1'} to={ {pathname: "shop",query:{geohash:this.props.geohash, id: item.id}}}>
+                      <li key={item.id + '2'} className="shop_li">
                         <section>
                           <img src={getImgPath(item.image_path)} alt="" className="shop_img"/>
                         </section>
@@ -124,7 +207,7 @@ class ShopList extends Component {
         }
         {
           this.state.showBackStatus ?
-            <aside className="return_top" onClick={this.backTop()}  >
+            <aside className="return_top"   >
               <i className="fa fa-arrow-up fa-lg" aria-hidden="true"></i>
             </aside> : ''
         }
