@@ -93,8 +93,20 @@ class Food extends Component {
 
     }
   }
-  getCategoryIds() {
+  getCategoryIds = (id, name) => {
+    this.setState({
+      restaurant_category_ids: id,
+      sortBy: '',
+      foodTitle :  name,
+      headTitle: name
+    })
+  }
 
+  sortList = (event) => {
+    this.setState({
+      sortByType : event.target.getAttribute('data'),
+      sortBy : ''
+    })
   }
 
   //筛选选项中的配送方式选择
@@ -157,26 +169,27 @@ class Food extends Component {
   }
 
   chooseType (type) {
+    alert(type);
+    let foodTitle;
     if (this.state.sortBy !== type) {
       //food选项中头部标题发生改变，需要特殊处理
-      let foodTitle;
       if (type == 'food') {
         foodTitle = '分类';
       }else{
         //将foodTitle 和 headTitle 进行同步
         foodTitle = this.state.headTitle;
       }
+      debugger;
       this.setState({
         sortBy: type,
         foodTitle: foodTitle
       })
     }else{
       //再次点击相同选项时收回列表
-      this.sortBy = '';
       if (type == 'food') {
         //将foodTitle 和 headTitle 进行同步
         this.setState({
-          foodTitle : this.state.headTitle
+          foodTitle: this.state.headTitle
         })
       }
       this.setState({
@@ -256,7 +269,7 @@ render() {
               {
                 this.state.sortBy === 'sort' ?
                   <section className="sort_detail_type">
-                      <ul className="sort_list_container">
+                      <ul className="sort_list_container" onClick={this.sortList}>
                         <li className="sort_list_li">
                            <p data="0" className={this.state.sortByType == 0 ? 'sort_select': '' }>
                             <span>智能排序</span>
@@ -303,6 +316,7 @@ render() {
               {
                 this.state.sortBy === 'activity' ?
                   <section className="sort_detail_type filter_container">
+
                     <section style={{width: '100%'}}>
                       <header className="filter_header_style">配送方式</header>
                       <ul className="filter_ul">
@@ -310,40 +324,15 @@ render() {
                           this.state.Delivery.map((item) => {
                             return (
                               <li key={item.id} className="filter_li" onClick={this.selectDeliveryMode({},item.id)}>
-                                 <span className={this.state.delivery_mode == item.id ? 'selected_filter' : ''}>{item.text}</span>
+                                <span className="{this.state.delivery_mode == item.id ? 'selected_filter' : ''}">{item.text}</span>
                               </li>
                             )
                           })
                         }
 
-                       </ul>
+                      </ul>
                     </section>
-                    <section style={{width: '100%'}}>
-                    <header className="filter_header_style">商家属性（可以多选）</header>
-                    <ul className="filter_ul" style={{paddingBottom: '.5rem'}}>
-                      {
-                        this.state.Activity.map( (item, index) =>{
-                          return(
-                               <li key={item.id} className="filter_li" onClick={this.selectSupportIds({}, index, item.id)}>
-                                 {
-                                   !this.state.support_ids[index].status ? <span className="filter_icon" style={{color: '#' + item.icon_color, borderColor: '#' + item.icon_color}} >{item.icon_name}</span> : ''
-                                 }
 
-                                 <span className={this.state.support_ids[index].status ? 'selected_filter' : '' }>{item.name}</span>
-                               </li>
-                            )
-                        } )
-                      }
-                    </ul>
-                  </section>
-                    <footer className="confirm_filter">
-                    <div className="clear_all filter_button_style" onClick={this.clearAll}>清空</div>
-                    <div className="confirm_select filter_button_style" onClick={this.confirmSelectFun}>确定
-                      {
-                        this.state.filterNum ?  <span>({this.state.filterNum})</span> : ''
-                      }
-                    </div>
-                  </footer>
                   </section>
                   :''
               }

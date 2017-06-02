@@ -28,6 +28,19 @@ class ShopList extends Component {
     this.backTop = this.backTop.bind(this);
   }
 
+  async componentWillReceiveProps(){
+    this.setState({
+      showLoading: true,
+      offset: 0
+    })
+    const latLnt = this.props.res;
+    const { restaurantCategoryId, restaurantCategoryIds, sortByType, deliveryMode, supportIds, confirmSelect, geohash } = this.props;
+    let res = await shopList(latLnt.latitude, latLnt.longitude, this.state.offset, '',restaurantCategoryIds, sortByType, deliveryMode, supportIds);
+    this.setState({
+      shopListArr: [...res],
+      showLoading: false
+    });
+  }
 
   async componentDidMount() {
     //开始监听scrollTop的值，达到一定程度后显示返回顶部按钮
