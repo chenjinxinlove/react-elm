@@ -169,7 +169,6 @@ class Food extends Component {
   }
 
   chooseType (type) {
-    alert(type);
     let foodTitle;
     if (this.state.sortBy !== type) {
       //food选项中头部标题发生改变，需要特殊处理
@@ -179,7 +178,6 @@ class Food extends Component {
         //将foodTitle 和 headTitle 进行同步
         foodTitle = this.state.headTitle;
       }
-      debugger;
       this.setState({
         sortBy: type,
         foodTitle: foodTitle
@@ -323,7 +321,7 @@ render() {
                         {
                           this.state.Delivery.map((item) => {
                             return (
-                              <li key={item.id} className="filter_li" onClick={this.selectDeliveryMode({},item.id)}>
+                              <li key={item.id} className="filter_li" onClick={this.selectDeliveryMode.bind({},item.id)}>
                                 <span className="{this.state.delivery_mode == item.id ? 'selected_filter' : ''}">{item.text}</span>
                               </li>
                             )
@@ -332,6 +330,32 @@ render() {
 
                       </ul>
                     </section>
+                    <section style={{width: '100%'}}>
+                      <header className="filter_header_style">商家属性（可以多选）</header>
+                      <ul className="filter_ul" style={{paddingBottom: '.5rem'}}>
+                        {
+                          this.state.Activity.map( (item, index) =>{
+                            return(
+                              <li key={item.id} className="filter_li" onClick={this.selectSupportIds.bind({}, index, item.id)}>
+                                {
+                                  !this.state.support_ids[index].status ? <span className="filter_icon" style={{color: '#' + item.icon_color, borderColor: '#' + item.icon_color}} >{item.icon_name}</span> : ''
+                                }
+
+                                <span className={this.state.support_ids[index].status ? 'selected_filter' : '' }>{item.name}</span>
+                              </li>
+                            )
+                          } )
+                        }
+                      </ul>
+                    </section>
+                    <footer className="confirm_filter">
+                      <div className="clear_all filter_button_style" onClick={this.clearAll}>清空</div>
+                      <div className="confirm_select filter_button_style" onClick={this.confirmSelectFun}>确定
+                        {
+                          this.state.filterNum ?  <span>({this.state.filterNum})</span> : ''
+                        }
+                      </div>
+                    </footer>
 
                   </section>
                   :''
