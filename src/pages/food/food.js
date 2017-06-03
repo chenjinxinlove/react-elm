@@ -158,7 +158,7 @@ class Food extends Component {
       filterNum : 0
     })
   }
-  //点击确认时，将需要筛选的id值传递给子组件，并且收回列表
+  //点击确认时，将需要筛选的id值传递给子组
   confirmSelectFun = () => {
     //状态改变时，因为子组件进行了监听，会重新获取数据进行筛选
 
