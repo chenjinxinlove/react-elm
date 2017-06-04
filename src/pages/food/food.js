@@ -148,7 +148,7 @@ class Food extends Component {
       support_ids
     })
   }
-  //点击取消或者确认时，需要清空当前已选的状态值
+  //点击取消或者确认时，需要清空当已选的状态值
   clearAll = () => {
     let support_ids = this.state.support_ids;
     support_ids = support_ids.map(item => item.status = false);
